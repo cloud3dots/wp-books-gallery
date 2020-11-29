@@ -190,6 +190,8 @@ class WBG_Admin
 		$wbg_filesize 		= get_post_meta($post->ID, 'wbg_filesize', true);
 		$wbg_status 		= get_post_meta($post->ID, 'wbg_status', true);
 ?>
+<datalist id="seek_list">
+</datalist>
 <table class="form-table">
     <tr class="wbg_author">
         <th scope="row">
