@@ -17,6 +17,18 @@
         this.parentElement.style.display = 'none';
     });
 
+    // Render Lender list.
+    var wbgLenders = JSON.parse($('.wbg_lenders :input').val());
+    wbgLenders.keys(data).forEach(function(key) {
+        $('.wbg_members :select#wbg_members option[value=""]')
+        console.table('Key : ' + key + ', Value : ' + data[key])
+    });
+
+    $('.wbg_members :input').on('click'), function() {
+        // Add selected member to the table.
+        // Add selected member to the list.
+    });
+
     $('input[name=post_title]').on('input', function() {
         console.debug('input ' + new Date());
         if (this.value.length > 1) {

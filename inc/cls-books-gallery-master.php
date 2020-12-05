@@ -50,6 +50,12 @@ class WBG_Master
 		$this->wbg_loader->add_action('wp_enqueue_scripts', $wbg_front, WBG_PRFX . 'front_assets');
 		$this->wbg_loader->add_filter('single_template', $wbg_front, 'wbg_load_single_template', 10);
 		$wbg_front->wbg_load_shortcode();
+		// Add actions for extending User Profiles.
+		// $this->wbg_loader->add_action('show_user_profile', $wbg_front, 'wbg_add_extra_user_fields' );
+		// $this->wbg_loader->add_action( 'edit_user_profile', $wbg_front, 'wbg_add_extra_user_fields' );
+		// $this->wbg_loader->add_action( 'personal_options_update', $wbg_front, 'wbg_save_extra_user_fields' );
+		// $this->wbg_loader->add_action( 'user_profile_update_errors', 'wbg_validate_extra_user_fields' );
+		// $this->wbg_loader->add_action( 'edit_user_profile_update', $wbg_front, 'wbg_save_extra_user_fields' )
 	}
 
 	function wbg_run()

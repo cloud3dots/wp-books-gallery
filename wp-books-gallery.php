@@ -33,7 +33,7 @@ function wbg_plugin_row_meta( $links, $file ) {
         $row_meta = array(
           'wbg_donation'    => '<a href="' . esc_url( 'https://www.paypal.me/mhmrajib/2' ) . '" target="_blank" aria-label="' . esc_attr__( 'Plugin Additional Links', 'domain' ) . '" style="color:green; font-weight: bold;">' . esc_html__( 'Donate us', 'domain' ) . '</a>'
         );
- 
+
         return array_merge( $links, $row_meta );
     }
     return (array) $links;
