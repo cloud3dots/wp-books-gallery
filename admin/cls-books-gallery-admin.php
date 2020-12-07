@@ -93,76 +93,75 @@ class WBG_Admin
 		);
 	}
 
-	function wbg_custom_post_type() {
-		$labels = array(
-			'name'                	=> __('Books'),
-			'singular_name'       	=> __('Book'),
-			'menu_name'           	=> __('WBG Books'),
-			'parent_item_colon'   	=> __('Parent Book'),
-			'all_items'           	=> __('All Books'),
-			'view_item'           	=> __('View Book'),
-			'add_new_item'        	=> __('Add New Book'),
-			'add_new'             	=> __('Add New'),
-			'edit_item'           	=> __('Edit Book'),
-			'update_item'         	=> __('Update Book'),
-			'search_items'        	=> __('Search Book'),
-			'not_found'           	=> __('Not Found'),
-			'not_found_in_trash'  	=> __('Not found in Trash')
+  function wbg_custom_post_type() {
+    $labels = array(
+      'name'                => __('Books'),
+      'singular_name'       => __('Book'),
+      'menu_name'           => __('WBG Books'),
+      'parent_item_colon'   => __('Parent Book'),
+      'all_items'           => __('All Books'),
+      'view_item'           => __('View Book'),
+      'add_new_item'        => __('Add New Book'),
+      'add_new'             => __('Add New'),
+      'edit_item'           => __('Edit Book'),
+      'update_item'         => __('Update Book'),
+      'search_items'        => __('Search Book'),
+      'not_found'           => __('Not Found'),
+      'not_found_in_trash'  => __('Not found in Trash')
 		);
-		$args = array(
-			'label'               	=> __('books'),
-			'description'         	=> __('Description For Books'),
-			'labels'              	=> $labels,
-			'supports'            	=> array('title', 'editor', 'thumbnail'),
-			'public'              	=> true,
-			'hierarchical'        	=> true,
-			'show_ui'             	=> true,
-			'show_in_menu'        	=> true,
-			'show_in_nav_menus'   	=> true,
-			'show_in_admin_bar'   	=> true,
-			'has_archive'         	=> true,
-        	'has_category'         	=> true, 
-			'can_export'          	=> true,
-			'exclude_from_search' 	=> false,
-			'yarpp_support'       	=> true,
-			//'taxonomies' 	      	=> array('post_tag'),
-			'publicly_queryable'  	=> true,
-			'capability_type'       => 'post',
-			'menu_icon'           	=> 'dashicons-book',
-			'query_var' 		  	=> true,
-			'taxonomies'  			=> array( 'category', 'post_tag' ),
-        	'rewrite'				=> array('slug' => 'books'),
-		);
-		register_post_type('books', $args);
-	}
+    $args = array(
+      'label'               => __('books'),
+      'description'         => __('Description For Books'),
+      'labels'              => $labels,
+      'supports'            => array('title', 'editor', 'thumbnail'),
+      'public'              => true,
+      'hierarchical'        => true,
+      'show_ui'             => true,
+      'show_in_menu'        => true,
+      'show_in_nav_menus'   => true,
+      'show_in_admin_bar'   => true,
+      'has_archive'         => true,
+      'has_category'        => true,
+      'can_export'          => true,
+      'exclude_from_search' => false,
+      'yarpp_support'       => true,
+      // 'taxonomies'          => array('post_tag'),
+      'publicly_queryable'  => true,
+      'capability_type'     => 'post',
+      'menu_icon'           => 'dashicons-book',
+      'query_var'           => true,
+      'taxonomies'          => array( 'category', 'post_tag' ),
+      'rewrite'             => array('slug' => 'books'),
+    );
+    register_post_type('books', $args);
+  }
 
 	function wbg_taxonomy_for_books() {
 		$labels = array(
-			'name' 				=> _x('Book Categories', 'taxonomy general name'),
-			'singular_name' 	=> _x('Book Category', 'taxonomy singular name'),
-			'search_items' 		=>  __('Search Book Categories'),
-			'all_items' 		=> __('All Book Categories'),
-			'parent_item' 		=> __('Parent Book Category'),
-			'parent_item_colon'	=> __('Parent Book Category:'),
-			'edit_item' 		=> __('Edit Book Category'),
-			'update_item' 		=> __('Update Book Category'),
-			'add_new_item' 		=> __('Add New Book Category'),
-			'new_item_name' 	=> __('New Book Category Name'),
-			'menu_name' 		=> __('Book Categories'),
+			'name'               => _x('Book Categories', 'taxonomy general name'),
+			'singular_name'      => _x('Book Category', 'taxonomy singular name'),
+			'search_items'       => __('Search Book Categories'),
+			'all_items'          => __('All Book Categories'),
+			'parent_item'        => __('Parent Book Category'),
+			'parent_item_colon'  => __('Parent Book Category:'),
+			'edit_item'          => __('Edit Book Category'),
+			'update_item'        => __('Update Book Category'),
+			'add_new_item'       => __('Add New Book Category'),
+			'new_item_name'      => __('New Book Category Name'),
+			'menu_name'          => __('Book Categories'),
 		);
 
 		register_taxonomy('book_category', array('books'), array(
-			'hierarchical' 		=> true,
-			'labels' 			=> $labels,
-			'show_ui' 			=> true,
-			'show_admin_column' => true,
-			'query_var' 		=> true,
-			'rewrite' 			=> array('slug' => 'book-category'),
+			'hierarchical'       => true,
+			'labels'             => $labels,
+			'show_ui'            => true,
+			'show_admin_column'  => true,
+			'query_var'          => true,
+			'rewrite'            => array('slug' => 'book-category'),
 		));
 	}
 
-	function wbg_book_details_metaboxes()
-	{
+	function wbg_book_details_metaboxes() {
 		add_meta_box(
 			'wbg_book_details_link',
 			'Book Details',
@@ -171,25 +170,35 @@ class WBG_Admin
 			'normal',
 			'high'
 		);
-	}
 
-	function wbg_book_details_content()
-	{
-		global $post;
+    add_meta_box(
+      'wbg_book_lenders_link',
+      'Book Club',
+      array($this, WBG_PRFX . 'book_lenders_content'),
+      'books',
+      'normal',
+      'high'
+    );
+  }
+
+  function wbg_book_details_content()	{
+    global $post;
 		// Nonce field to validate form request came from current site
 		wp_nonce_field(basename(__FILE__), 'event_fields');
-		$wbg_author 		= get_post_meta($post->ID, 'wbg_author', true);
-		$wbg_download_link 	= get_post_meta($post->ID, 'wbg_download_link', true);
-		$wbg_publisher 		= get_post_meta($post->ID, 'wbg_publisher', true);
-		$wbg_published_on 	= get_post_meta($post->ID, 'wbg_published_on', true);
-		$wbg_isbn 			= get_post_meta($post->ID, 'wbg_isbn', true);
-		$wbg_pages 			= get_post_meta($post->ID, 'wbg_pages', true);
-		$wbg_country 		= get_post_meta($post->ID, 'wbg_country', true);
-		$wbg_language 		= get_post_meta($post->ID, 'wbg_language', true);
-		$wbg_dimension 		= get_post_meta($post->ID, 'wbg_dimension', true);
-		$wbg_filesize 		= get_post_meta($post->ID, 'wbg_filesize', true);
-		$wbg_status 		= get_post_meta($post->ID, 'wbg_status', true);
+		$wbg_author         = get_post_meta($post->ID, 'wbg_author', true);
+		$wbg_download_link  = get_post_meta($post->ID, 'wbg_download_link', true);
+		$wbg_publisher      = get_post_meta($post->ID, 'wbg_publisher', true);
+		$wbg_published_on   = get_post_meta($post->ID, 'wbg_published_on', true);
+		$wbg_isbn           = get_post_meta($post->ID, 'wbg_isbn', true);
+		$wbg_pages          = get_post_meta($post->ID, 'wbg_pages', true);
+		$wbg_country        = get_post_meta($post->ID, 'wbg_country', true);
+		$wbg_language       = get_post_meta($post->ID, 'wbg_language', true);
+		$wbg_dimension      = get_post_meta($post->ID, 'wbg_dimension', true);
+		$wbg_filesize       = get_post_meta($post->ID, 'wbg_filesize', true);
+		$wbg_status         = get_post_meta($post->ID, 'wbg_status', true);
 ?>
+<datalist id="seek_list">
+</datalist>
 <table class="form-table">
     <tr class="wbg_author">
         <th scope="row">
@@ -288,90 +297,150 @@ class WBG_Admin
     </tr>
 </table>
 <?php
-	}
+  }
 
-	/**
-	 * Save the metabox data
-	 */
-	function wbg_save_book_meta($post_id)
-	{
-		global $post;
+  function wbg_book_lenders_content() {
+    global $post;
+		// Nonce field to validate form request came from current site
+		wp_nonce_field(basename(__FILE__), 'event_fields');
+		$wbg_lenders = maybe_unserialize(get_post_meta($post->ID, 'wbg_lenders', true));
 
-		if (!current_user_can('edit_post', $post_id)) {
-			return $post_id;
-		}
+    // TODO: Move this code to a helper function named wbg_book_club_members() outside this class.
+    $book_club_members = $this->wbg_book_club_members();
+?>
+<table class="form-table">
+  <tr class="wbg_lenders">
+      <th scope="row">
+          <label for="wbg_lenders"><?php esc_html_e('Lenders:', WBG_TXT_DOMAIN); ?></label>
+      </th>
+      <td>
+          <?php
+          // Loop through array and make a checkbox for each element
+          foreach ( $book_club_members as $bcm) {
+              $id = $bcm->data->ID;
+              $name = $bcm->data->display_name;
 
-		if (!isset($_POST['wbg_author']) || !wp_verify_nonce($_POST['event_fields'], basename(__FILE__))) {
-			return $post_id;
-		}
+              // If the postmeta for checkboxes exist and
+              // this element is part of saved meta check it.
+              if ( is_array( $wbg_lenders ) && in_array( $id, $wbg_lenders ) ) {
+                  $checked = 'checked="checked"';
+              } else {
+                  $checked = null;
+              }
+              ?>
 
-		$events_meta['wbg_author'] 			= (!empty($_POST['wbg_author']) && (sanitize_text_field($_POST['wbg_author']) != '')) ? sanitize_text_field($_POST['wbg_author']) : '';
-		$events_meta['wbg_download_link'] 	= (!empty($_POST['wbg_download_link']) && (sanitize_text_field($_POST['wbg_download_link']) != '')) ? sanitize_text_field($_POST['wbg_download_link']) : '';
-		$events_meta['wbg_publisher'] 		= (!empty($_POST['wbg_publisher']) && (sanitize_text_field($_POST['wbg_publisher']) != '')) ? sanitize_text_field($_POST['wbg_publisher']) : '';
-		$events_meta['wbg_published_on'] 	= (!empty($_POST['wbg_published_on']) && (sanitize_text_field($_POST['wbg_published_on']) != '')) ? sanitize_text_field($_POST['wbg_published_on']) : '';
-		$events_meta['wbg_isbn'] 			= (!empty($_POST['wbg_isbn']) && (sanitize_text_field($_POST['wbg_isbn']) != '')) ? sanitize_text_field($_POST['wbg_isbn']) : '';
-		$events_meta['wbg_pages'] 			= (!empty($_POST['wbg_pages']) && (sanitize_text_field($_POST['wbg_pages']) != '')) ? sanitize_text_field($_POST['wbg_pages']) : '';
-		$events_meta['wbg_country'] 		= (!empty($_POST['wbg_country']) && (sanitize_text_field($_POST['wbg_country']) != '')) ? sanitize_text_field($_POST['wbg_country']) : '';
-		$events_meta['wbg_language'] 		= (!empty($_POST['wbg_language']) && (sanitize_text_field($_POST['wbg_language']) != '')) ? sanitize_text_field($_POST['wbg_language']) : '';
-		$events_meta['wbg_dimension'] 		= (!empty($_POST['wbg_dimension']) && (sanitize_text_field($_POST['wbg_dimension']) != '')) ? sanitize_text_field($_POST['wbg_dimension']) : '';
-		$events_meta['wbg_filesize'] 		= (!empty($_POST['wbg_filesize']) && (sanitize_text_field($_POST['wbg_filesize']) != '')) ? sanitize_text_field($_POST['wbg_filesize']) : '';
-		$events_meta['wbg_status'] 			= (!empty($_POST['wbg_status']) && (sanitize_text_field($_POST['wbg_status']) != '')) ? sanitize_text_field($_POST['wbg_status']) : '';
+              <p>
+                  <input  type="checkbox" name="wbg_lenders[]" value="<?php echo $id;?>" <?php echo $checked; ?> />
+                  <label for="wbg_lenders[]"> <?php echo $name;?></label>
+              </p>
 
-		foreach ($events_meta as $key => $value) :
-			if ('revision' === $post->post_type) {
-				return;
-			}
-			if (get_post_meta($post_id, $key, false)) {
-				update_post_meta($post_id, $key, $value);
-			} else {
-				add_post_meta($post_id, $key, $value);
-			}
-			if (!$value) {
-				delete_post_meta($post_id, $key);
-			}
-		endforeach;
-	}
+              <?php
+          }
+          ?>
 
-	function wbg_general_settings() {
-		require_once WBG_PATH . 'admin/view/' . $this->wbg_assets_prefix . 'general-settings.php';
-	}
+      </td>
+  </tr>
 
-	function wbg_details_settings() {
-		require_once WBG_PATH . 'admin/view/' . $this->wbg_assets_prefix . 'details-settings.php';
-	}
+</table>
+<?php
+  }
 
-	function wbg_search_panel_settings() {
-		
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
-		}
-	
-		$tab = isset ( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : null;
+  /**
+   * Save the metabox data
+   */
+	function wbg_save_book_meta($post_id) {
+    global $post;
 
-		require_once WBG_PATH . 'admin/view/' . $this->wbg_assets_prefix . 'search-settings.php';
-	}
+    if (!current_user_can('edit_post', $post_id)) {
+      return $post_id;
+    }
 
-	function wbg_get_help() {
-		?>
-		<div id="poststuff" class="wrap">
-			<div class="postbox">
-				<div style="padding:20px;">
-					<h3>For any help or query please visit us:</h3>
-					<a href="<?php echo esc_url('http://plugin.hossnimubarak.com/wp-books-gallery/'); ?>" class="button button-primary" target="_blank"><?php esc_attr_e('Support & Live Chat', WBG_TXT_DOMAIN); ?></a>
-				</div>
-			</div>
-		</div>
-		<?php
-	}
+    if (!isset($_POST['wbg_author']) || !wp_verify_nonce($_POST['event_fields'], basename(__FILE__))) {
+      return $post_id;
+    }
 
-	function wbg_display_notification($type, $msg) { 
-		?>
-		<div class="wbg-alert <?php printf('%s', $type); ?>">
-			<span class="wbg-closebtn">&times;</span>
-			<strong><?php esc_html_e( ucfirst( $type ), WBG_TXT_DOMAIN); ?>!</strong>
-			<?php esc_html_e( $msg, WBG_TXT_DOMAIN ); ?>
-		</div>
-		<?php 
-	}
+    $events_meta['wbg_author'] 				= (!empty($_POST['wbg_author']) && (sanitize_text_field($_POST['wbg_author']) != '')) ? sanitize_text_field($_POST['wbg_author']) : '';
+    $events_meta['wbg_download_link'] = (!empty($_POST['wbg_download_link']) && (sanitize_text_field($_POST['wbg_download_link']) != '')) ? sanitize_text_field($_POST['wbg_download_link']) : '';
+    $events_meta['wbg_publisher'] 		= (!empty($_POST['wbg_publisher']) && (sanitize_text_field($_POST['wbg_publisher']) != '')) ? sanitize_text_field($_POST['wbg_publisher']) : '';
+    $events_meta['wbg_published_on'] 	= (!empty($_POST['wbg_published_on']) && (sanitize_text_field($_POST['wbg_published_on']) != '')) ? sanitize_text_field($_POST['wbg_published_on']) : '';
+    $events_meta['wbg_isbn'] 					= (!empty($_POST['wbg_isbn']) && (sanitize_text_field($_POST['wbg_isbn']) != '')) ? sanitize_text_field($_POST['wbg_isbn']) : '';
+    $events_meta['wbg_pages'] 				= (!empty($_POST['wbg_pages']) && (sanitize_text_field($_POST['wbg_pages']) != '')) ? sanitize_text_field($_POST['wbg_pages']) : '';
+    $events_meta['wbg_country'] 			= (!empty($_POST['wbg_country']) && (sanitize_text_field($_POST['wbg_country']) != '')) ? sanitize_text_field($_POST['wbg_country']) : '';
+    $events_meta['wbg_language'] 			= (!empty($_POST['wbg_language']) && (sanitize_text_field($_POST['wbg_language']) != '')) ? sanitize_text_field($_POST['wbg_language']) : '';
+    $events_meta['wbg_dimension'] 		= (!empty($_POST['wbg_dimension']) && (sanitize_text_field($_POST['wbg_dimension']) != '')) ? sanitize_text_field($_POST['wbg_dimension']) : '';
+    $events_meta['wbg_filesize'] 			= (!empty($_POST['wbg_filesize']) && (sanitize_text_field($_POST['wbg_filesize']) != '')) ? sanitize_text_field($_POST['wbg_filesize']) : '';
+    $events_meta['wbg_status'] 				= (!empty($_POST['wbg_status']) && (sanitize_text_field($_POST['wbg_status']) != '')) ? sanitize_text_field($_POST['wbg_status']) : '';
+    $events_meta['wbg_lenders'] 			= (!empty($_POST['wbg_lenders'])) ? $_POST['wbg_lenders'] : '';
+
+    foreach ($events_meta as $key => $value) :
+      if ('revision' === $post->post_type) {
+        return;
+      }
+      if (get_post_meta($post_id, $key, false)) {
+        update_post_meta($post_id, $key, $value);
+      } else {
+        add_post_meta($post_id, $key, $value);
+      }
+      if (!$value) {
+        delete_post_meta($post_id, $key);
+      }
+    endforeach;
+  }
+
+  function wbg_general_settings() {
+    require_once WBG_PATH . 'admin/view/' . $this->wbg_assets_prefix . 'general-settings.php';
+  }
+
+  function wbg_details_settings() {
+    require_once WBG_PATH . 'admin/view/' . $this->wbg_assets_prefix . 'details-settings.php';
+  }
+
+  function wbg_search_panel_settings() {
+
+    if ( ! current_user_can( 'manage_options' ) ) {
+      return;
+    }
+
+    $tab = isset ( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : null;
+
+    require_once WBG_PATH . 'admin/view/' . $this->wbg_assets_prefix . 'search-settings.php';
+  }
+
+  function wbg_get_help() {
+    ?>
+    <div id="poststuff" class="wrap">
+      <div class="postbox">
+        <div style="padding:20px;">
+          <h3>For any help or query please visit us:</h3>
+          <a href="<?php echo esc_url('http://plugin.hossnimubarak.com/wp-books-gallery/'); ?>" class="button button-primary" target="_blank"><?php esc_attr_e('Support & Live Chat', WBG_TXT_DOMAIN); ?></a>
+        </div>
+      </div>
+    </div>
+    <?php
+  }
+
+  function wbg_display_notification($type, $msg) {
+    ?>
+    <div class="wbg-alert <?php printf('%s', $type); ?>">
+      <span class="wbg-closebtn">&times;</span>
+      <strong><?php esc_html_e( ucfirst( $type ), WBG_TXT_DOMAIN); ?>!</strong>
+      <?php esc_html_e( $msg, WBG_TXT_DOMAIN ); ?>
+    </div>
+    <?php
+  }
+
+  function wbg_book_club_members() {
+    // Add Admin User ID (1) to array for excluding it.
+    $exclude_list = array( 1 );
+    $args = array(
+        // TODO: We may filter only users in the role book_club_lender;
+        // 'role' => 'Admin',
+        'exclude' => $exclude_list
+    );
+    // Custom query.
+    $custom_user_query = new WP_User_Query( $args );
+    // Get query results.
+    return $custom_user_query->get_results();
+  }
 }
 ?>

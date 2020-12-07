@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * Template Name: WBG Books Details
  *
@@ -35,10 +35,12 @@ $wbg_filesize_label         = isset( $wbgDetailSettings['wbg_filesize_label'] ) 
 $wbg_display_download_button    = isset( $wbgDetailSettings['wbg_display_download_button'] ) ? $wbgDetailSettings['wbg_display_download_button'] : '1';
 $wbg_display_description    = isset( $wbgDetailSettings['wbg_display_description'] ) ? $wbgDetailSettings['wbg_display_description'] : '1';
 $wbg_description_label      = isset( $wbgDetailSettings['wbg_description_label'] ) ? $wbgDetailSettings['wbg_description_label'] : 'Description';
+$wbg_display_lenders        = isset( $wbgDetailSettings['wbg_display_lenders'] ) ? $wbgDetailSettings['wbg_display_lenders'] : '1';
+$wbg_lenders_label          = isset( $wbgDetailSettings['wbg_lenders_label'] ) ? $wbgDetailSettings['wbg_lenders_label'] : 'Lenders';
 ?>
 
 <div class="wbg-details-wrapper">
-    <?php 
+    <?php
     if ( have_posts() ) {
         while (have_posts()) { the_post(); ?>
 
@@ -53,8 +55,8 @@ $wbg_description_label      = isset( $wbgDetailSettings['wbg_description_label']
         </div>
         <div class="wbg-details-summary">
             <h5 class="wbg-details-book-title"><?php the_title(); ?></h5>
-            <?php 
-            if( 1 == $wbgAuthorInfo ) { 
+            <?php
+            if( 1 == $wbgAuthorInfo ) {
                 ?>
                 <span>
                     <b><?php echo esc_html( $wbgAuthorLabel ); ?>:</b>
@@ -65,10 +67,10 @@ $wbg_description_label      = isset( $wbgDetailSettings['wbg_description_label']
                     }
                     ?>
                 </span>
-                <?php 
-            } 
-            
-            if( 1 == $wbgDisplayCategory ) { 
+                <?php
+            }
+
+            if( 1 == $wbgDisplayCategory ) {
                 ?>
                 <span>
                     <b><?php echo esc_html( $wbgCategoryLabel ); ?>:</b>
@@ -81,7 +83,7 @@ $wbg_description_label      = isset( $wbgDetailSettings['wbg_description_label']
                     echo implode( ', ', $wbgCatArray );
                     ?>
                 </span>
-                <?php 
+                <?php
             } ?>
             <?php if (1 == $wbgDisplayPublisher) { ?>
             <span>
@@ -175,7 +177,7 @@ $wbg_description_label      = isset( $wbgDetailSettings['wbg_description_label']
                             ?>
                 </span>
             <?php } ?>
-            <?php 
+            <?php
             if ( '1' == $wbg_display_download_button ) { ?>
                 <?php
                 $wbgLink = get_post_meta($post->ID, 'wbg_download_link', true);
@@ -187,11 +189,11 @@ $wbg_description_label      = isset( $wbgDetailSettings['wbg_description_label']
                     </span>
                     <?php
                     }
-                } 
+                }
             }
             ?>
         </div>
-        
+
         <div class="wbg-details-description">
             <?php if ( '1' == $wbg_display_description ) { ?>
                 <?php if( ! empty( get_the_content() ) ) { ?>
@@ -205,9 +207,39 @@ $wbg_description_label      = isset( $wbgDetailSettings['wbg_description_label']
                 <?php } ?>
             <?php } ?>
         </div>
-        <?php 
+
+        <div class="wbg-details-lenders">
+            <?php if ( '1' == $wbg_display_lenders ) { ?>
+                <?php if( ! empty( get_the_content() ) ) { ?>
+                    <div class="wbg-details-lenders-title">
+                        <b><?php echo esc_html( $wbg_lenders_label ); ?>:</b>
+                        <hr>
+                    </div>
+                    <div class="wbg-details-lenders-content">
+                      <span>
+                      <?php
+                          $wbg_lenders = maybe_unserialize(get_post_meta($post->ID, 'wbg_lenders', true));
+                          // Normalize to Array().
+                          if ( !is_array( $wbg_lenders ) ) {
+                              $wbg_lenders = array($wbg_lenders);
+                          }
+                          foreach ( $wbg_lenders as $lender_id ) {
+                              // TODO: Decouple from BuddyPress with a fhelper method or make it required.
+                              // $lender = get_user_by( 'id', $lender_id );
+                              // $lender_profile_link = '<a href="'.site_url().'/members/'.$lender->user_login.'/">'.$lender->display_name.'</a>';
+                              $lender_profile_link = bp_core_get_userlink( $lender_id );
+                              echo '<p>'.$lender_profile_link.'</p>';
+                          }
+                      ?>
+                      </span>
+                    </div>
+                <?php } ?>
+            <?php } ?>
+        </div>
+
+        <?php
         }
-    } 
+    }
     ?>
 
 </div>

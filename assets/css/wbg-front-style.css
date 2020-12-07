@@ -194,7 +194,7 @@ a.page-numbers:hover {
 
 
 /*******************
-* Details Page css 
+* Details Page css
 ********************/
 
 .wbg-details-wrapper {
@@ -252,20 +252,42 @@ a.page-numbers:hover {
 
 .wbg-details-wrapper .wbg-details-description .wbg-details-description-title {
     border: 0px solid #009900;
-    padding: 0 8px;
+    padding: 0 8px 0 8px;
 }
 
 .wbg-details-wrapper .wbg-details-description .wbg-details-description-title hr {
     margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 .wbg-details-wrapper .wbg-details-description .wbg-details-description-content {
     padding: 0 8px;
 }
 
+.wbg-details-wrapper .wbg-details-lenders {
+    margin-top: 20px;
+    font-size: 14px;
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+
+.wbg-details-wrapper .wbg-details-lenders .wbg-details-lenders-title {
+    border: 0px solid #009900;
+    padding: 0 8px 0 8px;
+}
+
+.wbg-details-wrapper .wbg-details-lenders .wbg-details-lenders-title hr {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.wbg-details-wrapper .wbg-details-lenders .wbg-details-lenders-content {
+    padding: 0 8px;
+}
+
 
 /*********************
-* Details Page Ended 
+* Details Page Ended
 **********************/
 
 
