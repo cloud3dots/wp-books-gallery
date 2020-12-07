@@ -28,6 +28,8 @@ if( isset( $_POST['updateDetailSettings'] ) ) {
         'wbg_display_download_button'   => ( isset( $_POST['wbg_display_download_button'] ) && filter_var( $_POST['wbg_display_download_button'], FILTER_SANITIZE_NUMBER_INT ) ) ? $_POST['wbg_display_download_button'] : '',
         'wbg_display_description'       => ( isset( $_POST['wbg_display_description'] ) && filter_var( $_POST['wbg_display_description'], FILTER_SANITIZE_NUMBER_INT ) ) ? $_POST['wbg_display_description'] : '',
         'wbg_description_label'         => ( sanitize_text_field( $_POST['wbg_description_label'] ) != '' ) ? sanitize_text_field( $_POST['wbg_description_label'] ) : 'Description',
+        'wbg_display_lenders'       => ( isset( $_POST['wbg_display_lenders'] ) && filter_var( $_POST['wbg_display_lenders'], FILTER_SANITIZE_NUMBER_INT ) ) ? $_POST['wbg_display_lenders'] : '',
+        'wbg_lenders_label'         => ( sanitize_text_field( $_POST['wbg_lenders_label'] ) != '' ) ? sanitize_text_field( $_POST['wbg_lenders_label'] ) : 'Lenders',
     );
 
     $wbgShowDetailMessage = update_option( 'wbg_detail_settings', serialize( $wbgDetailSettingsInfo ) );
@@ -50,6 +52,9 @@ $wbg_filesize_label         = isset( $wbgDetailSettings['wbg_filesize_label'] ) 
 $wbg_display_download_button    = isset( $wbgDetailSettings['wbg_display_download_button'] ) ? $wbgDetailSettings['wbg_display_download_button'] : '';
 $wbg_display_description        = isset( $wbgDetailSettings['wbg_display_description'] ) ? $wbgDetailSettings['wbg_display_description'] : '';
 $wbg_description_label          = isset( $wbgDetailSettings['wbg_description_label'] ) ? $wbgDetailSettings['wbg_description_label'] : 'Description';
+$wbg_display_lenders        = isset( $wbgDetailSettings['wbg_display_lenders'] ) ? $wbgDetailSettings['wbg_display_lenders'] : '';
+$wbg_lenders_label          = isset( $wbgDetailSettings['wbg_lenders_label'] ) ? $wbgDetailSettings['wbg_lenders_label'] : 'Lenders';
+
 ?>
 <div id="wph-wrap-all" class="wrap wbg-settings-page">
     <div class="settings-banner">
@@ -246,6 +251,21 @@ $wbg_description_label          = isset( $wbgDetailSettings['wbg_description_lab
                 <td>
                     <input type="text" name="wbg_description_label" placeholder="Description" class="medium-text"
                         value="<?php echo esc_attr( $wbg_description_label ); ?>">
+                </td>
+            </tr>
+            <tr class="wbg_display_lenders">
+                <th scope="row" style="text-align: right;">
+                    <label for="wbg_display_lenders"><?php esc_html_e('Display Lenders:', WBG_TXT_DOMAIN); ?></label>
+                </th>
+                <td>
+                    <input type="checkbox" name="wbg_display_lenders" class="wbg_display_lenders" value="1" <?php echo ( '1' === $wbg_display_lenders ) ? 'checked' : ''; ?> >
+                </td>
+                <th scope="row" style="text-align: right;">
+                    <label for="wbg_lenders_label"><?php esc_html_e('Lenders Label:', WBG_TXT_DOMAIN); ?></label>
+                </th>
+                <td>
+                    <input type="text" name="wbg_lenders_label" placeholder="Lenders" class="medium-text"
+                        value="<?php echo esc_attr( $wbg_lenders_label ); ?>">
                 </td>
             </tr>
         </table>
