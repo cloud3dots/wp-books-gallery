@@ -17,33 +17,16 @@
         this.parentElement.style.display = 'none';
     });
 
-    // Render Lender list.
-    var wbgLenders = JSON.parse($('.wbg_lenders :input').val());
-    wbgLenders.keys(data).forEach(function(key) {
-        $('.wbg_members :select#wbg_members option[value=""]')
-        console.table('Key : ' + key + ', Value : ' + data[key])
-    });
-
-    $('.wbg_members :input').on('click'), function() {
-        // Add selected member to the table.
-        // Add selected member to the list.
-    });
-
     $('input[name=post_title]').on('input', function() {
-        console.debug('input ' + new Date());
         if (this.value.length > 1) {
             $(this).attr('list', 'seek_list');
             $(this).searchBooks();
         } else {
             $(this).removeAttr('list')
         }
-    // }).on('blur change click dblclick error focus focusin focusout hover keydown keypress keyup load mousedown mouseenter mouseleave mousemove mouseout mouseover mouseup resize scroll select submit', function(){
     }).on('select', function() {
-        console.debug('select ' + new Date());
         var id = $("#seek_list option[value='" + this.value + "']").attr('data-id');
-        // var selected = $('#seek_list option#' + id);
         var selected = $('#seek_list').find(`[data-id='${id}']`);
-        console.log(selected);
         $(selected).searchBook();
     });
 
@@ -59,7 +42,6 @@
                 var datalist = $('datalist#seek_list');
                 datalist.empty();
                 result.items.forEach(function(item) {
-                    //console.debug(item.volumeInfo.title + " : " + data.title);
                     if (item.volumeInfo.title === data.title || item.volumeInfo.title.startsWith(data.title)) {
                         datalist.prepend("<option value='" + item.volumeInfo.title + "' data-id='" + item.id + "'>");
                     }
@@ -89,9 +71,7 @@
             } else if (typeof result.volumeInfo.subtitle !== 'undefined') {
                 wbg_description = result.volumeInfo.subtitle;
             }
-            console.log(wbg_description);
             $('textarea[name=content]').html(wbg_description);
-            console.log($('textarea[name=content]'));
             var wbg_author = result.volumeInfo.authors.join(', ');
             $('input[name=wbg_author]').val(wbg_author);
             var wbg_publisher = result.volumeInfo.publisher;
