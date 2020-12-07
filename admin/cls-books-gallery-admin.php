@@ -93,48 +93,48 @@ class WBG_Admin
 		);
 	}
 
-	function wbg_custom_post_type() {
-		$labels = array(
-			'name'                	=> __('Books'),
-			'singular_name'       	=> __('Book'),
-			'menu_name'           	=> __('WBG Books'),
-			'parent_item_colon'   	=> __('Parent Book'),
-			'all_items'           	=> __('All Books'),
-			'view_item'           	=> __('View Book'),
-			'add_new_item'        	=> __('Add New Book'),
-			'add_new'             	=> __('Add New'),
-			'edit_item'           	=> __('Edit Book'),
-			'update_item'         	=> __('Update Book'),
-			'search_items'        	=> __('Search Book'),
-			'not_found'           	=> __('Not Found'),
-			'not_found_in_trash'  	=> __('Not found in Trash')
+  function wbg_custom_post_type() {
+    $labels = array(
+      'name'                => __('Books'),
+      'singular_name'       => __('Book'),
+      'menu_name'           => __('WBG Books'),
+      'parent_item_colon'   => __('Parent Book'),
+      'all_items'           => __('All Books'),
+      'view_item'           => __('View Book'),
+      'add_new_item'        => __('Add New Book'),
+      'add_new'             => __('Add New'),
+      'edit_item'           => __('Edit Book'),
+      'update_item'         => __('Update Book'),
+      'search_items'        => __('Search Book'),
+      'not_found'           => __('Not Found'),
+      'not_found_in_trash'  => __('Not found in Trash')
 		);
-		$args = array(
-			'label'               	=> __('books'),
-			'description'         	=> __('Description For Books'),
-			'labels'              	=> $labels,
-			'supports'            	=> array('title', 'editor', 'thumbnail'),
-			'public'              	=> true,
-			'hierarchical'        	=> true,
-			'show_ui'             	=> true,
-			'show_in_menu'        	=> true,
-			'show_in_nav_menus'   	=> true,
-			'show_in_admin_bar'   	=> true,
-			'has_archive'         	=> true,
-      'has_category'         	=> true,
-			'can_export'          	=> true,
-			'exclude_from_search' 	=> false,
-			'yarpp_support'       	=> true,
-			//'taxonomies' 	      	=> array('post_tag'),
-			'publicly_queryable'  	=> true,
-			'capability_type'       => 'post',
-			'menu_icon'           	=> 'dashicons-book',
-			'query_var' 		  			=> true,
-			'taxonomies'  					=> array( 'category', 'post_tag' ),
-      'rewrite'								=> array('slug' => 'books'),
-		);
-		register_post_type('books', $args);
-	}
+    $args = array(
+      'label'               => __('books'),
+      'description'         => __('Description For Books'),
+      'labels'              => $labels,
+      'supports'            => array('title', 'editor', 'thumbnail'),
+      'public'              => true,
+      'hierarchical'        => true,
+      'show_ui'             => true,
+      'show_in_menu'        => true,
+      'show_in_nav_menus'   => true,
+      'show_in_admin_bar'   => true,
+      'has_archive'         => true,
+      'has_category'        => true,
+      'can_export'          => true,
+      'exclude_from_search' => false,
+      'yarpp_support'       => true,
+      // 'taxonomies'          => array('post_tag'),
+      'publicly_queryable'  => true,
+      'capability_type'     => 'post',
+      'menu_icon'           => 'dashicons-book',
+      'query_var'           => true,
+      'taxonomies'          => array( 'category', 'post_tag' ),
+      'rewrite'             => array('slug' => 'books'),
+    );
+    register_post_type('books', $args);
+  }
 
 	function wbg_taxonomy_for_books() {
 		$labels = array(
@@ -303,53 +303,44 @@ class WBG_Admin
     global $post;
 		// Nonce field to validate form request came from current site
 		wp_nonce_field(basename(__FILE__), 'event_fields');
-		$wbg_lenders = get_post_meta($post->ID, 'wbg_lenders', true);
-    $wbg_lenders_json = json_encode(unserialize($wbg_lenders));
+		$wbg_lenders = maybe_unserialize(get_post_meta($post->ID, 'wbg_lenders', true));
+
+    // TODO: Move this code to a helper function named wbg_book_club_members() outside this class.
+    $book_club_members = $this->wbg_book_club_members();
 ?>
-<datalist id="seek_list"></datalist>
 <table class="form-table">
   <tr class="wbg_lenders">
-    <th scope="row">
-      <label for="wbg_lenders"><?php esc_html_e('Lenders:', WBG_TXT_DOMAIN); ?></label>
-    </th>
-    <td>
-			<?php
-      // TODO: Select only those in the group wbg_lenders
-      wp_dropdown_users( array( 'name' => 'wbg_lenders' ) );
-      // wp_checkbox_users( array( 'name' => 'wbg_lenders' ) );
-      ?>
-    </td>
-  </tr>
-	<tr class="wbg_lenders">
-    <th scope="row">
-      <label for="wbg_lenders"><?php esc_html_e('Lenders:', WBG_TXT_DOMAIN); ?></label>
-    </th>
-    <td>
-			<?php
-      // TODO: Select only those in the group wbg_lenders
-      wp_dropdown_users( array( 'name' => 'wbg_lenders' ) );
-      // wp_checkbox_users( array( 'name' => 'wbg_lenders' ) );
-      ?>
-      <input type="button" value="Add" onclick="add_lender()">
-    </td>
-  </tr>
-	<tr class="wbg_lenders">
-    <th scope="row">
-      <label for="wbg_lenders"><?php esc_html_e('Lenders:', WBG_TXT_DOMAIN); ?></label>
-    </th>
-    <td>
-      <input type="hidden" value="<?php echo esc_attr(json_decode($wbg_lenders_json)); ?>">
-      <datalist id="wbg_lenders">
+      <th scope="row">
+          <label for="wbg_lenders"><?php esc_html_e('Lenders:', WBG_TXT_DOMAIN); ?></label>
+      </th>
+      <td>
           <?php
-              foreach ($wbg_lenders_json as $key => $value) {
-                  echo "<option value=\"$value\" data-id=\"$key\"></option>";
+          // Loop through array and make a checkbox for each element
+          foreach ( $book_club_members as $bcm) {
+              $id = $bcm->data->ID;
+              $name = $bcm->data->display_name;
+
+              // If the postmeta for checkboxes exist and
+              // this element is part of saved meta check it.
+              if ( is_array( $wbg_lenders ) && in_array( $id, $wbg_lenders ) ) {
+                  $checked = 'checked="checked"';
+              } else {
+                  $checked = null;
               }
+              ?>
+
+              <p>
+                  <input  type="checkbox" name="wbg_lenders[]" value="<?php echo $id;?>" <?php echo $checked; ?> />
+                  <label for="wbg_lenders[]"> <?php echo $name;?></label>
+              </p>
+
+              <?php
+          }
           ?>
-      </datalist>
-      <table class="wbg_lenders">
-      </table>
-    </td>
+
+      </td>
   </tr>
+
 </table>
 <?php
   }
@@ -379,7 +370,7 @@ class WBG_Admin
     $events_meta['wbg_dimension'] 		= (!empty($_POST['wbg_dimension']) && (sanitize_text_field($_POST['wbg_dimension']) != '')) ? sanitize_text_field($_POST['wbg_dimension']) : '';
     $events_meta['wbg_filesize'] 			= (!empty($_POST['wbg_filesize']) && (sanitize_text_field($_POST['wbg_filesize']) != '')) ? sanitize_text_field($_POST['wbg_filesize']) : '';
     $events_meta['wbg_status'] 				= (!empty($_POST['wbg_status']) && (sanitize_text_field($_POST['wbg_status']) != '')) ? sanitize_text_field($_POST['wbg_status']) : '';
-    $events_meta['wbg_lenders'] 			= (!empty($_POST['wbg_lenders']) && (sanitize_text_field($_POST['wbg_lenders']) != '')) ? sanitize_text_field($_POST['wbg_lenders']) : '';
+    $events_meta['wbg_lenders'] 			= (!empty($_POST['wbg_lenders'])) ? $_POST['wbg_lenders'] : '';
 
     foreach ($events_meta as $key => $value) :
       if ('revision' === $post->post_type) {
@@ -436,6 +427,20 @@ class WBG_Admin
       <?php esc_html_e( $msg, WBG_TXT_DOMAIN ); ?>
     </div>
     <?php
+  }
+
+  function wbg_book_club_members() {
+    // Add Admin User ID (1) to array for excluding it.
+    $exclude_list = array( 1 );
+    $args = array(
+        // TODO: We may filter only users in the role book_club_lender;
+        // 'role' => 'Admin',
+        'exclude' => $exclude_list
+    );
+    // Custom query.
+    $custom_user_query = new WP_User_Query( $args );
+    // Get query results.
+    return $custom_user_query->get_results();
   }
 }
 ?>
