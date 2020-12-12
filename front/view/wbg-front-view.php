@@ -3,15 +3,15 @@ global $wpdb;
 
 // Gallery Settings
 $wbgGeneralSettings         = stripslashes_deep( unserialize( get_option('wbg_general_settings') ) );
-$wbgGalleryColumn           = ( $wbgGeneralSettings['wbg_gallary_column'] != '' ) ? $wbgGeneralSettings['wbg_gallary_column'] : 3;
+$wbgGalleryColumn           = isset( $wbgGeneralSettings['wbg_gallary_column'] ) && ( $wbgGeneralSettings['wbg_gallary_column'] != '' ) ? $wbgGeneralSettings['wbg_gallary_column'] : 3;
 $wbg_gallary_column_mobile  = isset( $wbgGeneralSettings['wbg_gallary_column_mobile'] ) ? $wbgGeneralSettings['wbg_gallary_column_mobile'] : 1;
 $wbg_gallary_sorting        = isset( $wbgGeneralSettings['wbg_gallary_sorting'] ) ? $wbgGeneralSettings['wbg_gallary_sorting'] : 'title';
-$wbgTitleLength             = ( $wbgGeneralSettings['wbg_title_length'] != '' ) ? $wbgGeneralSettings['wbg_title_length'] : 4;
-$wbgDetailsExternal         = ( $wbgGeneralSettings['wbg_details_is_external'] == 1 ) ? ' target="_blank"' : '';
+$wbgTitleLength             = isset( $wbgGeneralSettings['wbg_title_length'] ) && ( $wbgGeneralSettings['wbg_title_length'] != '' ) ? $wbgGeneralSettings['wbg_title_length'] : 4;
+$wbgDetailsExternal         = isset( $wbgGeneralSettings['wbg_details_is_external'] ) && ( $wbgGeneralSettings['wbg_details_is_external'] == 1 ) ? ' target="_blank"' : '';
 $wbg_display_category       = isset( $wbgGeneralSettings['wbg_display_category'] ) ? $wbgGeneralSettings['wbg_display_category'] : '1';
-$wbgCatLbl                  = ( $wbgGeneralSettings['wbg_cat_label_txt'] != '' ) ? $wbgGeneralSettings['wbg_cat_label_txt'] : '';
+$wbgCatLbl                  = isset( $wbgGeneralSettings['wbg_cat_label_txt'] ) && ( $wbgGeneralSettings['wbg_cat_label_txt'] != '' ) ? $wbgGeneralSettings['wbg_cat_label_txt'] : '';
 $wbg_display_author         = isset( $wbgGeneralSettings['wbg_display_author'] ) ? $wbgGeneralSettings['wbg_display_author'] : '1';
-$wbgAuthorLbl               = ( $wbgGeneralSettings['wbg_author_label_txt'] != '' ) ? $wbgGeneralSettings['wbg_author_label_txt'] : '';
+$wbgAuthorLbl               = isset( $wbgGeneralSettings['wbg_author_label_txt'] ) && ( $wbgGeneralSettings['wbg_author_label_txt'] != '' ) ? $wbgGeneralSettings['wbg_author_label_txt'] : '';
 $wbg_display_description    = isset( $wbgGeneralSettings['wbg_display_description'] ) ? $wbgGeneralSettings['wbg_display_description'] : '1';
 $wbg_description_length     = isset( $wbgGeneralSettings['wbg_description_length'] ) ? $wbgGeneralSettings['wbg_description_length'] : 20;
 $wbg_display_buynow         = isset( $wbgGeneralSettings['wbg_display_buynow'] ) ? $wbgGeneralSettings['wbg_display_buynow'] : '1';
@@ -149,7 +149,7 @@ if ( '1' === $wbg_display_search_panel ) {
   ?>
 
   <style type="text/css">
-  .wbg-search-container .wbg-search-item .submit-btn {
+  .wbg-search-wrap .wbg-search-item .submit-btn {
     background: <?php echo esc_html( $wbg_btn_color ); ?>;
     box-shadow: 0 3px 0px 0.5px <?php echo esc_html( $wbg_btn_border_color ); ?>;
     color: <?php echo esc_html( $wbg_btn_font_color ); ?>;
@@ -158,7 +158,9 @@ if ( '1' === $wbg_display_search_panel ) {
 
   <form action="" method="POST" id="wbg-search-form">
   <?php if(function_exists('wp_nonce_field')) { wp_nonce_field('wbg_nonce_field'); } ?>
-    <div class="wrap wbg-search-container">
+    <div class="wbg-search-wrap">
+      <div class="wbg-search-row">
+      <div class="wbg-search-column">
       <?php
       if( '1' === $wbg_display_search_title ) {
         ?>
@@ -167,9 +169,15 @@ if ( '1' === $wbg_display_search_panel ) {
         </div>
         <?php
       }
-      
+      ?>
+      </div>
+      </div>
+
+      <div class="wbg-search-row">
+      <?php
       if( '1' === $wbg_display_search_category ) {
         ?>
+        <div class="wbg-search-column">
         <div class="wbg-search-item">
           <select id="wbg_category_s" name="wbg_category_s">
               <option value=""><?php esc_html_e('All Categories', WBG_TXT_DOMAIN); ?></option>
@@ -179,11 +187,13 @@ if ( '1' === $wbg_display_search_panel ) {
               <?php } ?>
           </select>
         </div>
+        </div>
         <?php
       }
 
       if( '1' === $wbg_display_search_author ) {
         ?>
+        <div class="wbg-search-column">
         <div class="wbg-search-item">
           <select id="wbg_author_s" name="wbg_author_s">
               <option value=""><?php esc_html_e('All Authors', WBG_TXT_DOMAIN); ?></option>
@@ -193,11 +203,13 @@ if ( '1' === $wbg_display_search_panel ) {
               <?php } ?>
           </select>
         </div>
+        </div>
         <?php
       }
 
       if( '1' === $wbg_display_search_publisher ) {
         ?>
+        <div class="wbg-search-column">
         <div class="wbg-search-item">
           <select id="wbg_publisher_s" name="wbg_publisher_s">
               <option value=""><?php esc_html_e('All Publishers', WBG_TXT_DOMAIN); ?></option>
@@ -208,12 +220,18 @@ if ( '1' === $wbg_display_search_panel ) {
               <?php } ?>
           </select>
         </div>
+        </div>
         <?php
       }
       ?>
+      </div>
 
-      <div class="wbg-search-item">
-        <input type="submit" name="submit" class="button submit-btn" value="<?php echo esc_attr( $wbg_search_btn_txt ); ?>">
+      <div class="wbg-search-row">
+      <div class="wbg-search-column">
+        <div class="wbg-search-item">
+          <input type="submit" name="submit" class="button submit-btn" value="<?php echo esc_attr( $wbg_search_btn_txt ); ?>">
+        </div>
+      </div>
       </div>
 
     </div>
