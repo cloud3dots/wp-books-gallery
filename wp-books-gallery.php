@@ -45,6 +45,9 @@ function wbg_myplugin_activate() {
     if ( ! get_option( 'wbg_flush_rewrite_rules_flag' ) ) {
         add_option( 'wbg_flush_rewrite_rules_flag', true );
     }
+    // create groups if they don't exist.
+    require_once WBG_PATH . 'inc/' . WBG_CLS_PRFX . 'activator.php';
+    WBG_Activator::activate();
 }
 
 add_action( 'init', 'wbg_flush_rewrite_rules_maybe', 10 );
