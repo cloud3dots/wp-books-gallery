@@ -433,8 +433,7 @@ class WBG_Admin
     // Add Admin User ID (1) to array for excluding it.
     $exclude_list = array( 1 );
     $args = array(
-        // TODO: We may filter only users in the role book_club_lender;
-        // 'role' => 'Admin',
+        'role' => 'book_club_lender',
         'exclude' => $exclude_list
     );
     // Custom query.
