@@ -12,13 +12,13 @@ $wbg_buynow_btn_txt         = isset( $wbgGeneralSettings['wbg_buynow_btn_txt'] )
 
 $wbgDetailSettings          = stripslashes_deep( unserialize( get_option('wbg_detail_settings') ) );
 $wbgAuthorInfo              = isset( $wbgDetailSettings['wbg_author_info'] ) ? $wbgDetailSettings['wbg_author_info'] : 1;
-$wbgAuthorLabel             = ($wbgDetailSettings['wbg_author_label'] != '') ? $wbgDetailSettings['wbg_author_label'] : 'Author';
-$wbgDisplayCategory         = isset($wbgDetailSettings['wbg_display_category']) ? $wbgDetailSettings['wbg_display_category'] : 1;
-$wbgCategoryLabel           = ($wbgDetailSettings['wbg_category_label'] != '') ? $wbgDetailSettings['wbg_category_label'] : 'Category';
-$wbgDisplayPublisher        = isset($wbgDetailSettings['wbg_display_publisher']) ? $wbgDetailSettings['wbg_display_publisher'] : 1;
-$wbgPublisherLabel          = ($wbgDetailSettings['wbg_publisher_label'] != '') ? $wbgDetailSettings['wbg_publisher_label'] : 'Publisher';
-$wbg_display_publish_date   = isset($wbgDetailSettings['wbg_display_publish_date']) ? $wbgDetailSettings['wbg_display_publish_date'] : 1;
-$wbg_publish_date_label     = ($wbgDetailSettings['wbg_publish_date_label'] != '') ? $wbgDetailSettings['wbg_publish_date_label'] : 'Publish';
+$wbgAuthorLabel             = isset( $wbgGeneralSettings['wbg_author_label_txt'] ) && ($wbgDetailSettings['wbg_author_label'] != '') ? $wbgDetailSettings['wbg_author_label'] : 'Author';
+$wbgDisplayCategory         = isset( $wbgDetailSettings['wbg_display_category'] ) ? $wbgDetailSettings['wbg_display_category'] : 1;
+$wbgCategoryLabel           = isset( $wbgGeneralSettings['wbg_category_label'] ) && ($wbgDetailSettings['wbg_category_label'] != '') ? $wbgDetailSettings['wbg_category_label'] : 'Category';
+$wbgDisplayPublisher        = isset( $wbgDetailSettings['wbg_display_publisher'] ) ? $wbgDetailSettings['wbg_display_publisher'] : 1;
+$wbgPublisherLabel          = isset( $wbgGeneralSettings['wbg_publisher_label'] ) && ($wbgDetailSettings['wbg_publisher_label'] != '') ? $wbgDetailSettings['wbg_publisher_label'] : 'Publisher';
+$wbg_display_publish_date   = isset( $wbgDetailSettings['wbg_display_publish_date'] ) ? $wbgDetailSettings['wbg_display_publish_date'] : 1;
+$wbg_publish_date_label     = isset( $wbgGeneralSettings['wbg_publish_date_label'] ) && ($wbgDetailSettings['wbg_publish_date_label'] != '') ? $wbgDetailSettings['wbg_publish_date_label'] : 'Publish';
 $wbg_publish_date_format    = isset( $wbgDetailSettings['wbg_publish_date_format'] ) ? $wbgDetailSettings['wbg_publish_date_format'] : 'full';
 $wbg_display_isbn           = isset( $wbgDetailSettings['wbg_display_isbn'] ) ? $wbgDetailSettings['wbg_display_isbn'] : '1';
 $wbg_isbn_label             = isset( $wbgDetailSettings['wbg_isbn_label'] ) ? $wbgDetailSettings['wbg_isbn_label'] : 'ISBN';
