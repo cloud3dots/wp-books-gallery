@@ -32,7 +32,7 @@ $wbg_display_dimension      = isset( $wbgDetailSettings['wbg_display_dimension']
 $wbg_dimension_label        = isset( $wbgDetailSettings['wbg_dimension_label'] ) ? $wbgDetailSettings['wbg_dimension_label'] : 'Dimension';
 $wbg_display_filesize       = isset( $wbgDetailSettings['wbg_display_filesize'] ) ? $wbgDetailSettings['wbg_display_filesize'] : '1';
 $wbg_filesize_label         = isset( $wbgDetailSettings['wbg_filesize_label'] ) ? $wbgDetailSettings['wbg_filesize_label'] : 'File Size';
-$wbg_display_download_button    = isset( $wbgDetailSettings['wbg_display_download_button'] ) ? $wbgDetailSettings['wbg_display_download_button'] : '1';
+$wbg_display_download_button = isset( $wbgDetailSettings['wbg_display_download_button'] ) ? $wbgDetailSettings['wbg_display_download_button'] : '1';
 $wbg_display_description    = isset( $wbgDetailSettings['wbg_display_description'] ) ? $wbgDetailSettings['wbg_display_description'] : '1';
 $wbg_description_label      = isset( $wbgDetailSettings['wbg_description_label'] ) ? $wbgDetailSettings['wbg_description_label'] : 'Description';
 $wbg_display_lenders        = isset( $wbgDetailSettings['wbg_display_lenders'] ) ? $wbgDetailSettings['wbg_display_lenders'] : '1';
@@ -208,6 +208,7 @@ $wbg_lenders_label          = isset( $wbgDetailSettings['wbg_lenders_label'] ) ?
             <?php } ?>
         </div>
 
+        <?php if ( is_user_logged_in() ) { ?>
         <div class="wbg-details-lenders">
             <?php if ( '1' == $wbg_display_lenders ) { ?>
                 <?php if( ! empty( get_the_content() ) ) { ?>
@@ -218,24 +219,28 @@ $wbg_lenders_label          = isset( $wbgDetailSettings['wbg_lenders_label'] ) ?
                     <div class="wbg-details-lenders-content">
                       <span>
                       <?php
-                          $wbg_lenders = maybe_unserialize(get_post_meta($post->ID, 'wbg_lenders', true));
-                          // Normalize to Array().
-                          if ( !is_array( $wbg_lenders ) ) {
-                              $wbg_lenders = array($wbg_lenders);
-                          }
-                          foreach ( $wbg_lenders as $lender_id ) {
-                              // TODO: Decouple from BuddyPress with a fhelper method or make it required.
-                              // $lender = get_user_by( 'id', $lender_id );
-                              // $lender_profile_link = '<a href="'.site_url().'/members/'.$lender->user_login.'/">'.$lender->display_name.'</a>';
-                              $lender_profile_link = bp_core_get_userlink( $lender_id );
-                              echo '<p>'.$lender_profile_link.'</p>';
-                          }
+                        // TODO: Move all this logic to a helper method.
+                        $wbg_lenders = maybe_unserialize(get_post_meta($post->ID, 'wbg_lenders', true));
+                        // Normalize to Array().
+                        if ( !is_array( $wbg_lenders ) ) {
+                            $wbg_lenders = array($wbg_lenders);
+                        }
+                        foreach ( $wbg_lenders as $lender_id ) {
+                            // TODO: Decouple from BuddyPress with a helper method or make it required.
+                            $lender = get_user_by( 'id', $lender_id );
+                            $lender_link = '<a href="mailto:'.$lender->user_email.'">'.$lender->display_name.'</a>';
+                            if ( ! function_exists( 'bp_core_get_userlink' ) ) {
+                                $lender_link = bp_core_get_userlink( $lender_id );
+                            }
+                            echo '<p>'.$lender_link.'</p>';
+                        }
                       ?>
                       </span>
                     </div>
                 <?php } ?>
             <?php } ?>
         </div>
+        <?php } ?>
 
         <?php
         }

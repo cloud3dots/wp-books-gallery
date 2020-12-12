@@ -13,16 +13,16 @@ class WBG_Activator{
 		if ( true === $are_defaults_set ) {
 			return;
 		}
-		if ( get_role( 'book_club_lenders' ) === null ) {
+		if ( get_role( 'book_club_lender' ) === null ) {
 			add_role(
-				'book_club_lenders', __( 'Book Club Lenders' ), array(
+				'book_club_lender', __( 'Book Club Lender' ), array(
 					'read' => true,
 				)
 			);
 		}
-		if ( get_role( 'book_club_borrowers' ) === null ) {
+		if ( get_role( 'book_club_borrower' ) === null ) {
 			add_role(
-				'book_club_borrowers', __( 'Book Club Borrowers' ), array(
+				'book_club_borrower', __( 'Book Club Borrower' ), array(
 					'read' => true,
 				)
 			);
@@ -42,6 +42,31 @@ class WBG_Activator{
 
 	private static function set_default_capability_for_one_role( $name ) {
 		$role = get_role( $name );
-		$role->add_cap( 'lend_book' );
+
+		if ( 'administrator' == $name ) {
+			self::set_book_club_borrow_capability( $role );
+			self::set_book_club_lend_capability( $role );
+			$role->add_cap( 'book_club_delete_book' );
+			return;
+		}
+
+		if ( 'book_club_lender' == $name ) {
+			self::set_book_club_lend_capability( $role );
+		}
+
+		if ( 'book_club_borrower' == $name ) {
+			self::set_book_club_borrow_capability( $role );
+		}
 	}
+
+	private static function set_book_club_lend_capability( $role ) {
+		$role->add_cap( 'book_club_lend_book' );
+		$role->add_cap( 'book_club_add_book' );
+		$role->add_cap( 'book_club_edit_book' );
+	}
+
+	private static function set_book_club_borrow_capability( $role ) {
+		$role->add_cap( 'book_club_borrow_book' );
+	}
+
 }
