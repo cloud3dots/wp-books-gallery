@@ -5,13 +5,13 @@ if( isset( $_POST['updateDetailSettings'] ) ) {
 
     $wbgDetailSettingsInfo = array(
         'wbg_author_info'           => isset($_POST['wbg_author_info']) && filter_var($_POST['wbg_author_info'], FILTER_SANITIZE_NUMBER_INT) ? $_POST['wbg_author_info'] : '',
-        'wbg_author_label'          => sanitize_text_field($_POST['wbg_author_label']) != '' ? sanitize_text_field($_POST['wbg_author_label']) : 'Author',
+        'wbg_author_label'          => ( sanitize_text_field($_POST['wbg_author_label']) != '' ) ? sanitize_text_field($_POST['wbg_author_label']) : 'Author',
         'wbg_display_category'      => isset($_POST['wbg_display_category']) && filter_var($_POST['wbg_display_category'], FILTER_SANITIZE_NUMBER_INT) ? $_POST['wbg_display_category'] : '',
-        'wbg_category_label'        => sanitize_text_field($_POST['wbg_category_label']) != '' ? sanitize_text_field($_POST['wbg_category_label']) : 'Category',
+        'wbg_category_label'        => ( sanitize_text_field($_POST['wbg_category_label']) != '' ) ? sanitize_text_field($_POST['wbg_category_label']) : 'Category',
         'wbg_display_publisher'     => isset($_POST['wbg_display_publisher']) && filter_var($_POST['wbg_display_publisher'], FILTER_SANITIZE_NUMBER_INT) ? $_POST['wbg_display_publisher'] : '',
-        'wbg_publisher_label'       => sanitize_text_field($_POST['wbg_publisher_label']) != '' ? sanitize_text_field($_POST['wbg_publisher_label']) : 'Publisher',
+        'wbg_publisher_label'       => ( sanitize_text_field($_POST['wbg_publisher_label']) != '' ) ? sanitize_text_field($_POST['wbg_publisher_label']) : 'Publisher',
         'wbg_display_publish_date'  => isset($_POST['wbg_display_publish_date']) && filter_var($_POST['wbg_display_publish_date'], FILTER_SANITIZE_NUMBER_INT) ? $_POST['wbg_display_publish_date'] : '',
-        'wbg_publish_date_label'    => sanitize_text_field($_POST['wbg_publish_date_label']) != '' ? sanitize_text_field($_POST['wbg_publish_date_label']) : 'Publish',
+        'wbg_publish_date_label'    => ( sanitize_text_field($_POST['wbg_publish_date_label']) != '' ) ? sanitize_text_field($_POST['wbg_publish_date_label']) : 'Publish',
         'wbg_publish_date_format'   => isset( $_POST['wbg_publish_date_format'] ) && filter_var( $_POST['wbg_publish_date_format'], FILTER_SANITIZE_STRING ) ? $_POST['wbg_publish_date_format'] : 'full',
         'wbg_display_isbn'          => ( isset( $_POST['wbg_display_isbn'] ) && filter_var( $_POST['wbg_display_isbn'], FILTER_SANITIZE_NUMBER_INT ) ) ? $_POST['wbg_display_isbn'] : '',
         'wbg_isbn_label'            => ( sanitize_text_field( $_POST['wbg_isbn_label'] ) != '' ) ? sanitize_text_field( $_POST['wbg_isbn_label'] ) : 'ISBN',
@@ -36,7 +36,11 @@ if( isset( $_POST['updateDetailSettings'] ) ) {
 }
 
 $wbgDetailSettings          = stripslashes_deep( unserialize( get_option('wbg_detail_settings') ) );
+$wbg_author_label           = isset( $wbgDetailSettings['wbg_author_label'] ) ? $wbgDetailSettings['wbg_author_label'] : 'Author';
+$wbg_category_label         = isset( $wbgDetailSettings['wbg_category_label'] ) ? $wbgDetailSettings['wbg_category_label'] : 'Category';
+$wbg_publisher_label        = isset( $wbgDetailSettings['wbg_publisher_label'] ) ? $wbgDetailSettings['wbg_publisher_label'] : 'Publisher';
 $wbg_publish_date_format    = isset( $wbgDetailSettings['wbg_publish_date_format'] ) ? $wbgDetailSettings['wbg_publish_date_format'] : 'full';
+$wbg_publish_date_label     = isset( $wbgDetailSettings['wbg_publish_date_label'] ) ? $wbgDetailSettings['wbg_publish_date_label'] : 'Publish';
 $wbg_display_isbn           = isset( $wbgDetailSettings['wbg_display_isbn'] ) ? $wbgDetailSettings['wbg_display_isbn'] : '';
 $wbg_isbn_label             = isset( $wbgDetailSettings['wbg_isbn_label'] ) ? $wbgDetailSettings['wbg_isbn_label'] : 'ISBN';
 $wbg_display_page           = isset( $wbgDetailSettings['wbg_display_page'] ) ? $wbgDetailSettings['wbg_display_page'] : '';
@@ -78,7 +82,7 @@ $wbg_lenders_label          = isset( $wbgDetailSettings['wbg_lenders_label'] ) ?
                 </th>
                 <td>
                     <input type="text" name="wbg_author_label" class="medium-text" placeholder="Author"
-                        value="<?php echo esc_attr($wbgDetailSettings['wbg_author_label']); ?>">
+                        value="<?php echo esc_attr($wbg_author_label); ?>">
                 </td>
             </tr>
             <tr class="wbg_display_category">
@@ -95,7 +99,7 @@ $wbg_lenders_label          = isset( $wbgDetailSettings['wbg_lenders_label'] ) ?
                 </th>
                 <td>
                     <input type="text" name="wbg_category_label" class="medium-text" placeholder="Category"
-                        value="<?php echo esc_attr($wbgDetailSettings['wbg_category_label']); ?>">
+                        value="<?php echo esc_attr($wbg_category_label); ?>">
                 </td>
             </tr>
             <tr class="wbg_display_publisher">
@@ -112,7 +116,7 @@ $wbg_lenders_label          = isset( $wbgDetailSettings['wbg_lenders_label'] ) ?
                 </th>
                 <td>
                     <input type="text" name="wbg_publisher_label" class="medium-text" placeholder="Publisher"
-                        value="<?php echo esc_attr($wbgDetailSettings['wbg_publisher_label']); ?>">
+                        value="<?php echo esc_attr($wbg_publisher_label); ?>">
                 </td>
             </tr>
             <tr class="wbg_display_publish_date">
@@ -127,7 +131,7 @@ $wbg_lenders_label          = isset( $wbgDetailSettings['wbg_lenders_label'] ) ?
                 </th>
                 <td>
                     <input type="text" name="wbg_publish_date_label" class="medium-text" placeholder="Publish"
-                        value="<?php echo esc_attr($wbgDetailSettings['wbg_publish_date_label']); ?>">
+                        value="<?php echo esc_attr($wbg_publish_date_label); ?>">
                 </td>
                 <th scope="row" style="text-align: right;">
                     <label for="wbg_publish_date_format"><?php esc_html_e('Date Format:', WBG_TXT_DOMAIN); ?></label>

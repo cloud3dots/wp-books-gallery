@@ -27,7 +27,9 @@ $wbg_gallary_column_mobile  = isset( $wbgGeneralSettings['wbg_gallary_column_mob
 $wbg_gallary_sorting        = isset( $wbgGeneralSettings['wbg_gallary_sorting'] ) ? $wbgGeneralSettings['wbg_gallary_sorting'] : 'title';
 $wbg_title_length           = isset( $wbgGeneralSettings['wbg_title_length'] ) ? $wbgGeneralSettings['wbg_title_length'] : 4;
 $wbg_display_category       = isset( $wbgGeneralSettings['wbg_display_category'] ) ? $wbgGeneralSettings['wbg_display_category'] : '1';
+$wbg_cat_label_txt          = isset( $wbgGeneralSettings['wbg_cat_label_txt'] ) ? $wbgGeneralSettings['wbg_cat_label_txt'] : '';
 $wbg_display_author         = isset( $wbgGeneralSettings['wbg_display_author'] ) ? $wbgGeneralSettings['wbg_display_author'] : '1';
+$wbg_author_label_txt       = isset( $wbgGeneralSettings['wbg_author_label_txt'] ) ? $wbgGeneralSettings['wbg_author_label_txt'] : '';
 $wbg_display_description    = isset( $wbgGeneralSettings['wbg_display_description'] ) ? $wbgGeneralSettings['wbg_display_description'] : '1';
 $wbg_description_length     = isset( $wbgGeneralSettings['wbg_description_length'] ) ? $wbgGeneralSettings['wbg_description_length'] : 20;
 $wbg_display_buynow         = isset( $wbgGeneralSettings['wbg_display_buynow'] ) ? $wbgGeneralSettings['wbg_display_buynow'] : '1';
@@ -116,7 +118,7 @@ $wbg_buynow_btn_txt         = isset( $wbgGeneralSettings['wbg_buynow_btn_txt'] )
                 </th>
                 <td>
                     <input type="text" name="wbg_cat_label_txt" placeholder="Category:" class="medium-text"
-                        value="<?php echo esc_attr($wbgGeneralSettings['wbg_cat_label_txt']); ?>">
+                        value="<?php echo esc_attr($wbg_cat_label_txt); ?>">
                 </td>
             </tr>
             <tr class="wbg_display_author">
@@ -134,7 +136,7 @@ $wbg_buynow_btn_txt         = isset( $wbgGeneralSettings['wbg_buynow_btn_txt'] )
                 </th>
                 <td>
                     <input type="text" name="wbg_author_label_txt" placeholder="By:" class="medium-text"
-                        value="<?php echo esc_attr($wbgGeneralSettings['wbg_author_label_txt']); ?>">
+                        value="<?php echo esc_attr($wbg_author_label_txt); ?>">
                 </td>
             </tr>
             <tr class="wbg_display_description">
