@@ -442,4 +442,4 @@ class WBG_Admin
     return $custom_user_query->get_results();
   }
 }
-?>
+

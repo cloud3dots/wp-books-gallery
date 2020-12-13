@@ -79,5 +79,6 @@ class WBG_Front
 	function wbg_save_extra_user_fields( $user_id ) {
 		update_user_meta($user_id, 'book', sanitize_text_field( $_POST['book'] ) );
 	}
+
 }
 ?>

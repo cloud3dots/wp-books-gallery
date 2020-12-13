@@ -6,6 +6,7 @@ class WBG_Activator{
 
 	public static function activate() {
 		self::set_default_roles();
+		self::add_extended_user_profile_fields();
 	}
 
 	public static function set_default_roles() {
@@ -67,6 +68,29 @@ class WBG_Activator{
 
 	private static function set_book_club_borrow_capability( $role ) {
 		$role->add_cap( 'book_club_borrow_book' );
+	}
+
+	private static function add_extended_user_profile_fields() {
+		// // Insert New Group.
+		// if (function_exists('xprofile_insert_field_group')) {
+		// 	$field_group = array('name' => 'Instructor', 'description' => 'Instructor only field group');
+		// 	$group_id = xprofile_insert_field_group($field_group);
+		// 	$fields = array(array('field_group_id' => 1, 'type' => 'textbox', 'name' => 'Location', 'description' => 'Student Location'), array('field_group_id' => 1, 'type' => 'textarea', 'name' => 'Bio', 'description' => 'About Student'), array('field_group_id' => $group_id, 'type' => 'textbox', 'name' => 'Speciality', 'description' => 'Instructor Speciality'));
+		// 	foreach ($fields as $field) {
+		// 		xprofile_insert_field($field);
+		// 	}
+		// }
+
+		// // Insert New Field.
+		// xprofile_insert_field(
+		// 	array (
+		// 		'field_group_id'  => 1,
+		//   		'name'            => 'Twitter',
+		// 		'field_order'     => 1,
+		// 		'is_required'     => false,
+		// 		'type'            => 'textbox'
+		// 	)
+		// );
 	}
 
 }
