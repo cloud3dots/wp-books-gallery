@@ -149,16 +149,30 @@ if ( '1' === $wbg_display_search_panel ) {
   ?>
 
   <style type="text/css">
-  .wbg-search-wrap .wbg-search-item .submit-btn {
+  .wbg-search-wrapper .wbg-search-item .submit-btn {
     background: <?php echo esc_html( $wbg_btn_color ); ?>;
     box-shadow: 0 3px 0px 0.5px <?php echo esc_html( $wbg_btn_border_color ); ?>;
     color: <?php echo esc_html( $wbg_btn_font_color ); ?>;
   }
   </style>
 
+  <?php if ( !is_user_logged_in() ) { ?>
+    <?php return; ?>
+  <?php } ?>
+  <div class="wbg-splash-wrapper">
+    <div class="wbg-splash-row">
+      <div class="wbg-splash-column">
+        <button type="button">Become a Lender</button>
+      </div>
+      <div class="wbg-splash-column">
+        <button type="button">Become a Borrower</button>
+      </div>
+    </div>
+  </div>
+
   <form action="" method="POST" id="wbg-search-form">
   <?php if(function_exists('wp_nonce_field')) { wp_nonce_field('wbg_nonce_field'); } ?>
-    <div class="wbg-search-wrap">
+    <div class="wbg-search-wrapper">
       <div class="wbg-search-row">
       <div class="wbg-search-column">
       <?php
