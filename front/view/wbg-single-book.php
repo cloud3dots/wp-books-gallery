@@ -37,6 +37,30 @@ $wbg_display_description    = isset( $wbgDetailSettings['wbg_display_description
 $wbg_description_label      = isset( $wbgDetailSettings['wbg_description_label'] ) ? $wbgDetailSettings['wbg_description_label'] : 'Description';
 $wbg_display_lenders        = isset( $wbgDetailSettings['wbg_display_lenders'] ) ? $wbgDetailSettings['wbg_display_lenders'] : '1';
 $wbg_lenders_label          = isset( $wbgDetailSettings['wbg_lenders_label'] ) ? $wbgDetailSettings['wbg_lenders_label'] : 'Lenders';
+
+$user = wp_get_current_user();
+$user_id_str = strval( $user->ID );
+$user_roles = (array) $user->roles;
+$wbg_lenders = maybe_unserialize(get_post_meta($post->ID, 'wbg_lenders', true));
+if ( empty($wbg_lenders) ) {
+    $wbg_lenders = array();
+}
+// Normalize to Array().
+if ( !is_array( $wbg_lenders ) ) {
+    $wbg_lenders = array($wbg_lenders);
+}
+
+// Lender action.
+if ( isset( $_POST['add_me_as_lender'] )  && !in_array( $user->ID, $wbg_lenders ) ) {
+    array_push( $wbg_lenders, $user_id_str );
+    update_post_meta( $post->ID, 'wbg_lenders', serialize($wbg_lenders) );
+} elseif ( isset( $_POST['remove_me_as_lender'] ) && in_array( $user->ID, $wbg_lenders ) ) {
+    $key = array_search($user_id_str, $wbg_lenders);
+    if ( $key !== false ) {
+        unset($wbg_lenders[$key]);
+    }
+    update_post_meta( $post->ID, 'wbg_lenders', serialize($wbg_lenders) );
+}
 ?>
 
 <div class="wbg-details-wrapper">
@@ -220,11 +244,6 @@ $wbg_lenders_label          = isset( $wbgDetailSettings['wbg_lenders_label'] ) ?
                       <span>
                       <?php
                         // TODO: Move all this logic to a helper method.
-                        $wbg_lenders = maybe_unserialize(get_post_meta($post->ID, 'wbg_lenders', true));
-                        // Normalize to Array().
-                        if ( !is_array( $wbg_lenders ) ) {
-                            $wbg_lenders = array($wbg_lenders);
-                        }
                         foreach ( $wbg_lenders as $lender_id ) {
                             // TODO: Decouple from BuddyPress with a helper method or make it required.
                             $lender = get_user_by( 'id', $lender_id );
@@ -241,6 +260,25 @@ $wbg_lenders_label          = isset( $wbgDetailSettings['wbg_lenders_label'] ) ?
             <?php } ?>
         </div>
         <?php } ?>
+
+        <?php
+            if ( in_array( 'book_club_lender', $user_roles ) ) {
+                // The user has the "book_club_lender" role.
+                if ( in_array( $user->ID, $wbg_lenders ) ) {
+                ?>
+                    <form action="" method="POST" id="wbg-lender-form">
+                        <div><input type="submit" name="remove_me_as_lender" class="button submit-btn" value="<?php echo esc_attr( "I can no longer lend this book" ); ?>"></div>
+                    </form>
+                <?php
+                } else {
+                ?>
+                    <form action="" method="POST" id="wbg-lender-form">
+                        <div><input type="submit" name="add_me_as_lender" class="button submit-btn" value="<?php echo esc_attr( "I can lend this book" ); ?>"></div>
+                    </form>
+                <?php
+                }
+            }
+        ?>
 
         <?php
         }
