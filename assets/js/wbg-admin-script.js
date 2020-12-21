@@ -92,7 +92,7 @@
             $('input[name=wbg_country]').val(result.saleInfo.country);
             $('input[name=wbg_language]').val(result.volumeInfo.language);
             $('input[name=wbg_download_link]').val(result.volumeInfo.infoLink);
-            var fifu_input_url = '';
+            var fifu_input_url = 'https://books.google.ca/googlebooks/images/no_cover_thumb.gif';
             if (typeof result.volumeInfo.imageLinks !== 'undefined' && typeof result.volumeInfo.imageLinks.thumbnail !== 'undefined') {
                 fifu_input_url = result.volumeInfo.imageLinks.thumbnail;
             }
