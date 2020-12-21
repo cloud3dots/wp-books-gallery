@@ -24,21 +24,27 @@
         } else {
             $(this).removeAttr('list')
         }
-    }).on('select', function() {
+    }).on('keyup', function() {
         var id = $("#seek_list option[value='" + this.value + "']").attr('data-id');
-        var selected = $('#seek_list').find(`[data-id='${id}']`);
-        $(selected).searchBook();
+        console.log(id);
+        if (typeof id !== 'undefined') {
+            console.log('select ' + new Date());
+            var selected = $('#seek_list').find(`[data-id='${id}']`);
+            console.log(selected);
+            $(selected).searchBook();
+        }
     });
 
     $.fn.searchBooks = function() {
-        console.debug('searchBooks()');
+        console.log('searchBooks()');
         return this.each(function() {
             // Search books by title.
+            console.log('Searching title: ' + encodeURIComponent(this.value));
             var url = 'https://www.googleapis.com/books/v1/volumes?q=' + encodeURIComponent(this.value);
             var data = { 'title' : this.value};
-            console.debug('searching books ' + url + ' ' + new Date());
+            console.log('searching books ' + url + ' ' + new Date());
             $.getJSON(url, data, function(result) {
-                console.debug(result.items);
+                console.log(result.items);
                 var datalist = $('datalist#seek_list');
                 datalist.empty();
                 result.items.forEach(function(item) {
@@ -57,12 +63,12 @@
     };
 
     $.fn.searchBook = function() {
-        console.debug('searchBook()');
+        console.log('searchBook()');
         // Search book by id using data-id.
         var url = 'https://www.googleapis.com/books/v1/volumes/' + this.data('id');
-        console.debug('searching book ' + url + ' ' + new Date());
+        console.log('searching book ' + url + ' ' + new Date());
         $.getJSON(url, {}, function(result) {
-            console.debug(result);
+            console.log(result);
             var wbg_title = result.volumeInfo.title;
             $('input[name=post_title]').val(wbg_title);
             var wbg_description = '';

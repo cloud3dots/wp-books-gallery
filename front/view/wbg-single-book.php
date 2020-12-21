@@ -267,13 +267,13 @@ if ( isset( $_POST['add_me_as_lender'] )  && !in_array( $user->ID, $wbg_lenders 
                 if ( in_array( $user->ID, $wbg_lenders ) ) {
                 ?>
                     <form action="" method="POST" id="wbg-lender-form">
-                        <div><input type="submit" name="remove_me_as_lender" class="button submit-btn" value="<?php echo esc_attr( "I can no longer lend this book" ); ?>"></div>
+                        <div><input type="submit" name="remove_me_as_lender" class="button submit-btn" value="<?php echo esc_attr( "Remove me as lender for this book" ); ?>"></div>
                     </form>
                 <?php
                 } else {
                 ?>
                     <form action="" method="POST" id="wbg-lender-form">
-                        <div><input type="submit" name="add_me_as_lender" class="button submit-btn" value="<?php echo esc_attr( "I can lend this book" ); ?>"></div>
+                        <div><input type="submit" name="add_me_as_lender" class="button submit-btn" value="<?php echo esc_attr( "Add me as a lended of this book" ); ?>"></div>
                     </form>
                 <?php
                 }

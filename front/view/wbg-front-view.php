@@ -160,17 +160,6 @@ if ( '1' === $wbg_display_search_panel ) {
     <div>You must be a memeber in order to access this content</div>
     <?php return; ?>
   <?php } ?>
-  <div class="wbg-splash-wrapper">
-    <div class="wbg-splash-row">
-      <div class="wbg-splash-column">
-        <button type="button">Become a Lender</button>
-      </div>
-      <div class="wbg-splash-column">
-        <button type="button">Become a Borrower</button>
-      </div>
-    </div>
-  </div>
-
   <form action="" method="POST" id="wbg-search-form">
   <?php if(function_exists('wp_nonce_field')) { wp_nonce_field('wbg_nonce_field'); } ?>
     <div class="wbg-search-wrapper">
