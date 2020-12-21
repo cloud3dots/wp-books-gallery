@@ -25,11 +25,11 @@
             $(this).removeAttr('list')
         }
     }).on('keyup', function() {
-        var id = $("#seek_list option[value='" + this.value + "']").attr('data-id');
+        var id = $("#seek_list option[value=\"" + this.value + "\"]").attr('data-id');
         console.log(id);
         if (typeof id !== 'undefined') {
             console.log('select ' + new Date());
-            var selected = $('#seek_list').find(`[data-id='${id}']`);
+            var selected = $('#seek_list').find(`[data-id="${id}"]`);
             console.log(selected);
             $(selected).searchBook();
         }
@@ -49,11 +49,11 @@
                 datalist.empty();
                 result.items.forEach(function(item) {
                     if (item.volumeInfo.title === data.title || item.volumeInfo.title.startsWith(data.title)) {
-                        datalist.prepend("<option value='" + item.volumeInfo.title + "' data-id='" + item.id + "'>");
+                        datalist.prepend("<option value=\"" + item.volumeInfo.title + "\" data-id=\"" + item.id + "\">");
                     }
                 });
                 $("datalist#seek_list option").each(function(){
-                    var sameOpt = $(this).parent().find("[value='" + this.value + "']:gt(0)");
+                    var sameOpt = $(this).parent().find("[value=\"" + this.value + "\"]:gt(0)");
                     sameOpt.val(function(i, val){
                         return val + '-' + (sameOpt.index(this) + 2);
                     });
