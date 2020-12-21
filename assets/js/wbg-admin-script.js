@@ -21,8 +21,6 @@
         if (this.value.length > 1) {
             $(this).attr('list', 'seek_list');
             $(this).searchBooks();
-        } else {
-            $(this).removeAttr('list')
         }
     }).on('keyup', function() {
         var id = $("#seek_list option[value=\"" + this.value + "\"]").attr('data-id');
@@ -48,9 +46,7 @@
                 var datalist = $('datalist#seek_list');
                 datalist.empty();
                 result.items.forEach(function(item) {
-                    if (item.volumeInfo.title === data.title || item.volumeInfo.title.startsWith(data.title)) {
-                        datalist.prepend("<option value=\"" + item.volumeInfo.title + "\" data-id=\"" + item.id + "\">");
-                    }
+                    datalist.prepend("<option value=\"" + item.volumeInfo.title + "\" data-id=\"" + item.id + "\">");
                 });
                 $("datalist#seek_list option").each(function(){
                     var sameOpt = $(this).parent().find("[value=\"" + this.value + "\"]:gt(0)");
@@ -78,7 +74,10 @@
                 wbg_description = result.volumeInfo.subtitle;
             }
             $('textarea[name=content]').html(wbg_description);
-            var wbg_author = result.volumeInfo.authors.join(', ');
+            var wbg_author = '';
+            if (typeof result.volumeInfo.authors !== 'undefined') {
+                wbg_author = result.volumeInfo.authors.join(', ');
+            }
             $('input[name=wbg_author]').val(wbg_author);
             var wbg_publisher = result.volumeInfo.publisher;
             $('input[name=wbg_publisher]').val(wbg_publisher);
