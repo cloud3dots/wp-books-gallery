@@ -39,6 +39,8 @@ class WBG_Master
 		$this->wbg_loader->add_action('add_meta_boxes', $wbg_admin, WBG_PRFX . 'book_details_metaboxes');
 		$this->wbg_loader->add_action('save_post', $wbg_admin, WBG_PRFX . 'save_book_meta', 1, 1);
 		$this->wbg_loader->add_action('admin_menu', $wbg_admin, WBG_PRFX . 'admin_menu', 0);
+		// Add actions for required plugins.
+		$this->wbg_loader->add_action('tgmpa_register', $wbg_admin, WBG_PRFX . 'register_required_plugins', 0);
 		// Add actions for extending User Profiles.
 		// $this->wbg_loader->add_action( 'show_user_profile', $wbg_admin, 'wbg_extend_user_profile_fields' );
 		// $this->wbg_loader->add_action( 'edit_user_profile', $wbg_admin, 'wbg_extend_user_profile_fields' );
@@ -73,7 +75,6 @@ class WBG_Master
 		require_once WBG_PATH . 'inc/' . WBG_CLS_PRFX . 'activator.php';
 		WBG_Activator::activate();
 	}
-
 
 	function wbg_unregister_settings() {
 		global $wpdb;

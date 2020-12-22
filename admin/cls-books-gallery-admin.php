@@ -441,5 +441,42 @@ class WBG_Admin
     // Get query results.
     return $custom_user_query->get_results();
   }
-}
 
+  function wbg_register_required_plugins() {
+    $plugins = array(
+        // Until this theme is published to the Wordpress Marketplace, the use of Update Checker for getting periodic updates is highly recommended.
+        array(
+            'name'         => 'Update Checker',
+            'slug'         => 'update-checker',
+            'source'       => 'https://gitlab.com/cloud3dots/wp-plugin-update-checker/-/archive/master/wp-plugin-update-checker-master.zip',
+            'required'     => false,
+            'external_url' => 'https://gitlab.com/cloud3dots/wp-plugin-update-checker',
+        ),
+        // Other recommended plugins from the WordPress Plugin Repository.
+        array(
+            'name'      => esc_html__('Featured Image from URL', WBG_TXT_DOMAIN),
+            'slug'      => 'featured-image-from-url',
+            'required'  => false,
+        ),
+    );
+
+    /*
+     * Array of configuration settings..
+     *
+     */
+    $config = array(
+        'id'           => 'wp-books-gallery',      // Unique ID for hashing notices for multiple instances of TGMPA.
+        'default_path' => '',                      // Default absolute path to bundled plugins.
+        'menu'         => 'tgmpa-install-plugins', // Menu slug.
+        'parent_slug'  => 'themes.php',            // Parent menu slug.
+        'capability'   => 'edit_theme_options',    // Capability needed to view plugin install page, should be a capability associated with the parent menu used.
+        'has_notices'  => true,                    // Show admin notices or not.
+        'dismissable'  => true,                    // If false, a user cannot dismiss the nag message.
+        'dismiss_msg'  => '',                      // If 'dismissable' is false, this message will be output at top of nag.
+        'is_automatic' => false,                   // Automatically activate plugins after installation or not.
+        'message'      => '',                      // Message to output right before the plugins table.
+    );
+
+    tgmpa($plugins, $config);
+  }
+}

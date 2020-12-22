@@ -92,5 +92,4 @@ class WBG_Activator{
 		// 	)
 		// );
 	}
-
 }
