@@ -248,7 +248,7 @@ if ( isset( $_POST['add_me_as_lender'] )  && !in_array( $user->ID, $wbg_lenders 
                             // TODO: Decouple from BuddyPress with a helper method or make it required.
                             $lender = get_user_by( 'id', $lender_id );
                             $lender_link = '<a href="mailto:'.$lender->user_email.'">'.$lender->display_name.'</a>';
-                            if ( ! function_exists( 'bp_core_get_userlink' ) ) {
+                            if ( function_exists( 'bp_core_get_userlink' ) ) {
                                 $lender_link = bp_core_get_userlink( $lender_id );
                             }
                             echo '<p>'.$lender_link.'</p>';

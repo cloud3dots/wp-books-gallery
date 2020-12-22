@@ -92,12 +92,22 @@
             $('input[name=wbg_country]').val(result.saleInfo.country);
             $('input[name=wbg_language]').val(result.volumeInfo.language);
             $('input[name=wbg_download_link]').val(result.volumeInfo.infoLink);
-            var fifu_input_url = 'https://books.google.ca/googlebooks/images/no_cover_thumb.gif';
-            if (typeof result.volumeInfo.imageLinks !== 'undefined' && typeof result.volumeInfo.imageLinks.thumbnail !== 'undefined') {
-                fifu_input_url = result.volumeInfo.imageLinks.thumbnail;
+            // Only if fifu plugin is installed and enabled.
+            var $fifuInputUrl = $('input[name=fifu_input_url]');
+            if ( !$fifuInputUrl.exists() ) {
+                return;
             }
-            $('input[name=fifu_input_url]').val(fifu_input_url);
+            // Assign default image.
+            var fifuInputUrl = 'https://books.google.ca/googlebooks/images/no_cover_thumb.gif';
+            if (typeof result.volumeInfo.imageLinks !== 'undefined' && typeof result.volumeInfo.imageLinks.thumbnail !== 'undefined') {
+                fifuInputUrl = result.volumeInfo.imageLinks.thumbnail;
+            }
+            $fifuInputUrl.val(fifuInputUrl);
         });
     };
+
+    $.fn.exists = function () {
+        return this.length !== 0;
+    }
 
 })(jQuery);
