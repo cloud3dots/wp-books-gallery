@@ -302,10 +302,8 @@ class WBG_Admin {
     global $post;
 		// Nonce field to validate form request came from current site
 		wp_nonce_field(basename(__FILE__), 'event_fields');
-		$wbg_lenders = maybe_unserialize(get_post_meta($post->ID, 'wbg_lenders', true));
-
-    // TODO: Move this code to a helper function named wbg_book_club_members() outside this class.
-    $book_club_members = $this->wbg_book_club_members();
+    $book_lenders = self::wbg_book_lenders($post->ID);
+    $book_club_lenders = self::wbg_book_club_lenders();
 ?>
 <table class="form-table">
   <tr class="wbg_lenders">
@@ -315,13 +313,13 @@ class WBG_Admin {
       <td>
           <?php
           // Loop through array and make a checkbox for each element
-          foreach ( $book_club_members as $bcm) {
-              $id = $bcm->data->ID;
-              $name = $bcm->data->display_name;
+          foreach ( $book_club_lenders as $bcl) {
+              $id = $bcl->data->ID;
+              $name = $bcl->data->display_name;
 
               // If the postmeta for checkboxes exist and
               // this element is part of saved meta check it.
-              if ( is_array( $wbg_lenders ) && in_array( $id, $wbg_lenders ) ) {
+              if ( is_array( $book_lenders ) && in_array( $id, $book_lenders ) ) {
                   $checked = 'checked="checked"';
               } else {
                   $checked = null;
@@ -354,7 +352,7 @@ class WBG_Admin {
       return $post_id;
     }
 
-    if (!isset($_POST['wbg_author']) || !wp_verify_nonce($_POST['event_fields'], basename(__FILE__))) {
+    if (!wp_verify_nonce($_POST['event_fields'], basename(__FILE__))) {
       return $post_id;
     }
 
@@ -371,7 +369,7 @@ class WBG_Admin {
     $events_meta['wbg_status'] 				= (!empty($_POST['wbg_status']) && (sanitize_text_field($_POST['wbg_status']) != '')) ? sanitize_text_field($_POST['wbg_status']) : '';
     $events_meta['wbg_lenders'] 			= (!empty($_POST['wbg_lenders'])) ? $_POST['wbg_lenders'] : '';
 
-    foreach ($events_meta as $key => $value) :
+    foreach ($events_meta as $key => $value) {
       if ('revision' === $post->post_type) {
         return;
       }
@@ -383,7 +381,7 @@ class WBG_Admin {
       if (!$value) {
         delete_post_meta($post_id, $key);
       }
-    endforeach;
+    }
   }
 
   function wbg_general_settings() {
@@ -426,19 +424,6 @@ class WBG_Admin {
       <?php esc_html_e( $msg, WBG_TXT_DOMAIN ); ?>
     </div>
     <?php
-  }
-
-  function wbg_book_club_members() {
-    // Add Admin User ID (1) to array for excluding it.
-    $exclude_list = array( 1 );
-    $args = array(
-        'role' => 'book_club_lender',
-        'exclude' => $exclude_list
-    );
-    // Custom query.
-    $custom_user_query = new WP_User_Query( $args );
-    // Get query results.
-    return $custom_user_query->get_results();
   }
 
   function wbg_register_required_plugins() {
@@ -485,10 +470,8 @@ class WBG_Admin {
       global $post;
       // Nonce field to validate form request came from current site
       wp_nonce_field(basename(__FILE__), 'event_fields');
-      $wbg_lenders = maybe_unserialize(get_post_meta($post->ID, 'wbg_lenders', true));
-
-      // TODO: Move this code to a helper function named wbg_book_club_members() outside this class.
-      $book_club_members = $this->wbg_book_club_members();
+      $book_lenders = self::wbg_book_lenders($post->ID);
+      $book_club_lenders = self::wbg_book_club_lenders();
 
       echo '
   <fieldset class="inline-edit-col-right">
@@ -511,13 +494,13 @@ class WBG_Admin {
       // ';
 
       // Loop through array and make a checkbox for each element
-      foreach ( $book_club_members as $bcm) {
-        $id = $bcm->data->ID;
-        $name = $bcm->data->display_name;
+      foreach ( $book_club_lenders as $bcl) {
+        $id = $bcl->data->ID;
+        $name = $bcl->data->display_name;
 
         // If the postmeta for checkboxes exist and
         // this element is part of saved meta check it.
-        if ( is_array( $wbg_lenders ) && in_array( $id, $wbg_lenders ) ) {
+        if ( in_array( $id, $book_lenders ) ) {
           $checked = 'checked="checked"';
         } else {
           $checked = null;
@@ -552,5 +535,27 @@ class WBG_Admin {
   function wbg_remove_column_lenders($posts_columns) {
     unset($posts_columns['lenders']);
     return $posts_columns;
+  }
+
+  public static function wbg_book_club_lenders() {
+    // Add Admin User ID (1) to array for excluding it.
+    $exclude_list = array( 1 );
+    $args = array(
+        'role' => 'book_club_lender',
+        'exclude' => $exclude_list
+    );
+    // Custom query.
+    $custom_user_query = new WP_User_Query( $args );
+    // Get query results.
+    return $custom_user_query->get_results();
+  }
+
+  public static function wbg_book_lenders($bookID) {
+    $book_lenders = maybe_unserialize(get_post_meta($bookID, 'wbg_lenders', true));
+    // Normalize to Array().
+    if ( !is_array( $book_lenders ) ) {
+      $book_lenders = array($book_lenders);
+    }
+    return $book_lenders;
   }
 };

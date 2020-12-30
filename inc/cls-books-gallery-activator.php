@@ -14,6 +14,13 @@ class WBG_Activator{
 		if ( true === $are_defaults_set ) {
 			return;
 		}
+		if ( get_role( 'book_club_librarian' ) === null ) {
+			add_role(
+				'book_club_borrower', __( 'Book Club Librarian' ), array(
+					'read' => true,
+				)
+			);
+		}
 		if ( get_role( 'book_club_lender' ) === null ) {
 			add_role(
 				'book_club_lender', __( 'Book Club Lender' ), array(
@@ -43,31 +50,45 @@ class WBG_Activator{
 
 	private static function set_default_capability_for_one_role( $name ) {
 		$role = get_role( $name );
-
 		if ( 'administrator' == $name ) {
-			self::set_book_club_borrow_capability( $role );
 			self::set_book_club_lend_capability( $role );
+			self::set_book_club_borrow_capability( $role );
+			self::set_book_club_manage_capability( $role );
 			$role->add_cap( 'book_club_delete_book' );
 			return;
 		}
-
+		if ( 'book_club_librarian' == $name ) {
+			self::set_book_club_manage_capability( $role );
+		}
 		if ( 'book_club_lender' == $name ) {
 			self::set_book_club_lend_capability( $role );
 		}
-
 		if ( 'book_club_borrower' == $name ) {
 			self::set_book_club_borrow_capability( $role );
 		}
 	}
 
-	private static function set_book_club_lend_capability( $role ) {
-		$role->add_cap( 'book_club_lend_book' );
+	private static function set_book_club_manage_capability( $role ) {
 		$role->add_cap( 'book_club_add_book' );
 		$role->add_cap( 'book_club_edit_book' );
+		$role->add_cap( 'book_club_manage_lenders' );
+		$role->add_cap( 'book_club_manage_borrowers' );
+		$role->add_cap( 'book_club_read_lenders' );
+		$role->add_cap( 'book_club_read_borrowers' );
+	}
+
+	private static function set_book_club_lend_capability( $role ) {
+		$role->add_cap( 'book_club_add_book' );
+		$role->add_cap( 'book_club_edit_book' );
+		$role->add_cap( 'book_club_lend_book' );
+		$role->add_cap( 'book_club_read_lenders' );
+		$role->add_cap( 'book_club_read_borrowers' );
 	}
 
 	private static function set_book_club_borrow_capability( $role ) {
 		$role->add_cap( 'book_club_borrow_book' );
+		$role->add_cap( 'book_club_read_lenders' );
+		$role->add_cap( 'book_club_read_borrowers' );
 	}
 
 	private static function add_extended_user_profile_fields() {

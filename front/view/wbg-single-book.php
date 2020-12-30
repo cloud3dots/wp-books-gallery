@@ -4,69 +4,68 @@
  *
  */
 
-get_header(); ?>
-
-<?php
-$wbgGeneralSettings         = stripslashes_deep( unserialize( get_option('wbg_general_settings') ) );
-$wbg_buynow_btn_txt         = isset( $wbgGeneralSettings['wbg_buynow_btn_txt'] ) ? $wbgGeneralSettings['wbg_buynow_btn_txt'] : 'Download';
-
-$wbgDetailSettings          = stripslashes_deep( unserialize( get_option('wbg_detail_settings') ) );
-$wbgAuthorInfo              = isset( $wbgDetailSettings['wbg_author_info'] ) ? $wbgDetailSettings['wbg_author_info'] : 1;
-$wbgAuthorLabel             = isset( $wbgGeneralSettings['wbg_author_label_txt'] ) && ($wbgDetailSettings['wbg_author_label'] != '') ? $wbgDetailSettings['wbg_author_label'] : 'Author';
-$wbgDisplayCategory         = isset( $wbgDetailSettings['wbg_display_category'] ) ? $wbgDetailSettings['wbg_display_category'] : 1;
-$wbgCategoryLabel           = isset( $wbgGeneralSettings['wbg_category_label'] ) && ($wbgDetailSettings['wbg_category_label'] != '') ? $wbgDetailSettings['wbg_category_label'] : 'Category';
-$wbgDisplayPublisher        = isset( $wbgDetailSettings['wbg_display_publisher'] ) ? $wbgDetailSettings['wbg_display_publisher'] : 1;
-$wbgPublisherLabel          = isset( $wbgGeneralSettings['wbg_publisher_label'] ) && ($wbgDetailSettings['wbg_publisher_label'] != '') ? $wbgDetailSettings['wbg_publisher_label'] : 'Publisher';
-$wbg_display_publish_date   = isset( $wbgDetailSettings['wbg_display_publish_date'] ) ? $wbgDetailSettings['wbg_display_publish_date'] : 1;
-$wbg_publish_date_label     = isset( $wbgGeneralSettings['wbg_publish_date_label'] ) && ($wbgDetailSettings['wbg_publish_date_label'] != '') ? $wbgDetailSettings['wbg_publish_date_label'] : 'Publish';
-$wbg_publish_date_format    = isset( $wbgDetailSettings['wbg_publish_date_format'] ) ? $wbgDetailSettings['wbg_publish_date_format'] : 'full';
-$wbg_display_isbn           = isset( $wbgDetailSettings['wbg_display_isbn'] ) ? $wbgDetailSettings['wbg_display_isbn'] : '1';
-$wbg_isbn_label             = isset( $wbgDetailSettings['wbg_isbn_label'] ) ? $wbgDetailSettings['wbg_isbn_label'] : 'ISBN';
-$wbg_display_page           = isset( $wbgDetailSettings['wbg_display_page'] ) ? $wbgDetailSettings['wbg_display_page'] : '1';
-$wbg_page_label             = isset( $wbgDetailSettings['wbg_page_label'] ) ? $wbgDetailSettings['wbg_page_label'] : 'Pages';
-$wbg_display_country        = isset( $wbgDetailSettings['wbg_display_country'] ) ? $wbgDetailSettings['wbg_display_country'] : '1';
-$wbg_country_label          = isset( $wbgDetailSettings['wbg_country_label'] ) ? $wbgDetailSettings['wbg_country_label'] : 'Country';
-$wbg_display_language       = isset( $wbgDetailSettings['wbg_display_language'] ) ? $wbgDetailSettings['wbg_display_language'] : '1';
-$wbg_language_label         = isset( $wbgDetailSettings['wbg_language_label'] ) ? $wbgDetailSettings['wbg_language_label'] : 'Language';
-$wbg_display_dimension      = isset( $wbgDetailSettings['wbg_display_dimension'] ) ? $wbgDetailSettings['wbg_display_dimension'] : '1';
-$wbg_dimension_label        = isset( $wbgDetailSettings['wbg_dimension_label'] ) ? $wbgDetailSettings['wbg_dimension_label'] : 'Dimension';
-$wbg_display_filesize       = isset( $wbgDetailSettings['wbg_display_filesize'] ) ? $wbgDetailSettings['wbg_display_filesize'] : '1';
-$wbg_filesize_label         = isset( $wbgDetailSettings['wbg_filesize_label'] ) ? $wbgDetailSettings['wbg_filesize_label'] : 'File Size';
-$wbg_display_download_button = isset( $wbgDetailSettings['wbg_display_download_button'] ) ? $wbgDetailSettings['wbg_display_download_button'] : '1';
-$wbg_display_description    = isset( $wbgDetailSettings['wbg_display_description'] ) ? $wbgDetailSettings['wbg_display_description'] : '1';
-$wbg_description_label      = isset( $wbgDetailSettings['wbg_description_label'] ) ? $wbgDetailSettings['wbg_description_label'] : 'Description';
-$wbg_display_lenders        = isset( $wbgDetailSettings['wbg_display_lenders'] ) ? $wbgDetailSettings['wbg_display_lenders'] : '1';
-$wbg_lenders_label          = isset( $wbgDetailSettings['wbg_lenders_label'] ) ? $wbgDetailSettings['wbg_lenders_label'] : 'Lenders';
+// Librarian action.
+if ( isset( $_POST['update_lenders'] ) && current_user_can( 'book_club_manage_lenders' ) ) {
+    $wbg_lenders = (!empty($_POST['wbg_lenders'])) ? $_POST['wbg_lenders'] : '';
+    error_log(json_encode($wbg_lenders));
+    update_post_meta( $post->ID, 'wbg_lenders', $wbg_lenders );
+}
 
 $user = wp_get_current_user();
-$user_id_str = strval( $user->ID );
-$user_roles = (array) $user->roles;
-$wbg_lenders = maybe_unserialize(get_post_meta($post->ID, 'wbg_lenders', true));
-if ( empty($wbg_lenders) ) {
-    $wbg_lenders = array();
-}
-// Normalize to Array().
-if ( !is_array( $wbg_lenders ) ) {
-    $wbg_lenders = array($wbg_lenders);
-}
+$book_lenders = WBG_Admin::wbg_book_lenders($post->ID);
 
 // Lender action.
-if ( isset( $_POST['add_me_as_lender'] )  && !in_array( $user->ID, $wbg_lenders ) ) {
-    array_push( $wbg_lenders, $user_id_str );
-    update_post_meta( $post->ID, 'wbg_lenders', serialize($wbg_lenders) );
-} elseif ( isset( $_POST['remove_me_as_lender'] ) && in_array( $user->ID, $wbg_lenders ) ) {
-    $key = array_search($user_id_str, $wbg_lenders);
-    if ( $key !== false ) {
-        unset($wbg_lenders[$key]);
+if ( current_user_can( 'book_club_lend_book' ) ) {
+    if ( isset( $_POST['add_me_as_lender'] ) && !in_array( $user->ID, $book_lenders ) ) {
+        array_push( $book_lenders, strval( $user->ID ) );
+        update_post_meta( $post->ID, 'wbg_lenders', serialize($book_lenders) );
+    } elseif ( isset( $_POST['remove_me_as_lender'] ) && in_array( $user->ID, $book_lenders ) ) {
+        $key = array_search( strval( $user->ID ), $book_lenders );
+        if ( $key !== false ) {
+            unset($book_lenders[$key]);
+        }
+        update_post_meta( $post->ID, 'wbg_lenders', serialize($book_lenders) );
     }
-    update_post_meta( $post->ID, 'wbg_lenders', serialize($wbg_lenders) );
 }
+
+get_header();
+
+$wbgGeneralSettings         = stripslashes_deep( unserialize( get_option('wbg_general_settings') ) );
+$wbgDetailSettings          = stripslashes_deep( unserialize( get_option('wbg_detail_settings') ) );
+
+$wbgAuthorInfo               = isset( $wbgDetailSettings['wbg_author_info'] ) ? $wbgDetailSettings['wbg_author_info'] : 1;
+$wbgAuthorLabel              = isset( $wbgGeneralSettings['wbg_author_label_txt'] ) && ($wbgDetailSettings['wbg_author_label'] != '') ? $wbgDetailSettings['wbg_author_label'] : 'Author';
+$wbgDisplayCategory          = isset( $wbgDetailSettings['wbg_display_category'] ) ? $wbgDetailSettings['wbg_display_category'] : 1;
+$wbgCategoryLabel            = isset( $wbgGeneralSettings['wbg_category_label'] ) && ($wbgDetailSettings['wbg_category_label'] != '') ? $wbgDetailSettings['wbg_category_label'] : 'Category';
+$wbgDisplayPublisher         = isset( $wbgDetailSettings['wbg_display_publisher'] ) ? $wbgDetailSettings['wbg_display_publisher'] : 1;
+$wbgPublisherLabel           = isset( $wbgGeneralSettings['wbg_publisher_label'] ) && ($wbgDetailSettings['wbg_publisher_label'] != '') ? $wbgDetailSettings['wbg_publisher_label'] : 'Publisher';
+$wbg_display_publish_date    = isset( $wbgDetailSettings['wbg_display_publish_date'] ) ? $wbgDetailSettings['wbg_display_publish_date'] : 1;
+$wbg_publish_date_label      = isset( $wbgGeneralSettings['wbg_publish_date_label'] ) && ($wbgDetailSettings['wbg_publish_date_label'] != '') ? $wbgDetailSettings['wbg_publish_date_label'] : 'Publish';
+$wbg_publish_date_format     = isset( $wbgDetailSettings['wbg_publish_date_format'] ) ? $wbgDetailSettings['wbg_publish_date_format'] : 'full';
+$wbg_display_isbn            = isset( $wbgDetailSettings['wbg_display_isbn'] ) ? $wbgDetailSettings['wbg_display_isbn'] : '1';
+$wbg_isbn_label              = isset( $wbgDetailSettings['wbg_isbn_label'] ) ? $wbgDetailSettings['wbg_isbn_label'] : 'ISBN';
+$wbg_display_page            = isset( $wbgDetailSettings['wbg_display_page'] ) ? $wbgDetailSettings['wbg_display_page'] : '1';
+$wbg_page_label              = isset( $wbgDetailSettings['wbg_page_label'] ) ? $wbgDetailSettings['wbg_page_label'] : 'Pages';
+$wbg_display_country         = isset( $wbgDetailSettings['wbg_display_country'] ) ? $wbgDetailSettings['wbg_display_country'] : '1';
+$wbg_country_label           = isset( $wbgDetailSettings['wbg_country_label'] ) ? $wbgDetailSettings['wbg_country_label'] : 'Country';
+$wbg_display_language        = isset( $wbgDetailSettings['wbg_display_language'] ) ? $wbgDetailSettings['wbg_display_language'] : '1';
+$wbg_language_label          = isset( $wbgDetailSettings['wbg_language_label'] ) ? $wbgDetailSettings['wbg_language_label'] : 'Language';
+$wbg_display_dimension       = isset( $wbgDetailSettings['wbg_display_dimension'] ) ? $wbgDetailSettings['wbg_display_dimension'] : '1';
+$wbg_dimension_label         = isset( $wbgDetailSettings['wbg_dimension_label'] ) ? $wbgDetailSettings['wbg_dimension_label'] : 'Dimension';
+$wbg_display_filesize        = isset( $wbgDetailSettings['wbg_display_filesize'] ) ? $wbgDetailSettings['wbg_display_filesize'] : '1';
+$wbg_filesize_label          = isset( $wbgDetailSettings['wbg_filesize_label'] ) ? $wbgDetailSettings['wbg_filesize_label'] : 'File Size';
+$wbg_display_download_button = isset( $wbgDetailSettings['wbg_display_download_button'] ) ? $wbgDetailSettings['wbg_display_download_button'] : '1';
+$wbg_download_button_label   = isset( $wbgGeneralSettings['wbg_buynow_btn_txt'] ) ? $wbgGeneralSettings['wbg_buynow_btn_txt'] : 'Download';
+$wbg_display_description     = isset( $wbgDetailSettings['wbg_display_description'] ) ? $wbgDetailSettings['wbg_display_description'] : '1';
+$wbg_description_label       = isset( $wbgDetailSettings['wbg_description_label'] ) ? $wbgDetailSettings['wbg_description_label'] : 'Description';
+$wbg_display_lenders         = isset( $wbgDetailSettings['wbg_display_lenders'] ) ? $wbgDetailSettings['wbg_display_lenders'] : '1';
+$wbg_lenders_label           = isset( $wbgDetailSettings['wbg_lenders_label'] ) ? $wbgDetailSettings['wbg_lenders_label'] : 'Lenders';
 ?>
 
 <div class="wbg-details-wrapper">
     <?php
-    if ( have_posts() ) {
-        while (have_posts()) { the_post(); ?>
+    if (have_posts()) {
+        the_post(); ?>
 
         <div class="wbg-details-image">
             <?php
@@ -206,10 +205,10 @@ if ( isset( $_POST['add_me_as_lender'] )  && !in_array( $user->ID, $wbg_lenders 
                 <?php
                 $wbgLink = get_post_meta($post->ID, 'wbg_download_link', true);
                 if ( $wbgLink !== '' ) {
-                    if ( $wbg_buynow_btn_txt !== '' ) {
+                    if ( $wbg_download_button_label !== '' ) {
                     ?>
                     <span>
-                        <a href="<?php echo esc_url( $wbgLink ); ?>" target="blank" class="button wbg-btn"><?php echo esc_html( $wbg_buynow_btn_txt ); ?></a>
+                        <a href="<?php echo esc_url( $wbgLink ); ?>" target="blank" class="button wbg-btn"><?php echo esc_html( $wbg_download_button_label ); ?></a>
                     </span>
                     <?php
                     }
@@ -232,56 +231,76 @@ if ( isset( $_POST['add_me_as_lender'] )  && !in_array( $user->ID, $wbg_lenders 
             <?php } ?>
         </div>
 
-        <?php if ( is_user_logged_in() ) { ?>
+        <?php if ( '1' == $wbg_display_lenders ) { ?>
         <div class="wbg-details-lenders">
-            <?php if ( '1' == $wbg_display_lenders ) { ?>
-                <div class="wbg-details-lenders-title">
-                    <b><?php echo esc_html( $wbg_lenders_label ); ?>:</b>
-                    <hr>
-                </div>
-                <div class="wbg-details-lenders-content">
-                    <span>
+            <div class="wbg-details-lenders-title">
+                <b><?php echo esc_html( $wbg_lenders_label ); ?>:</b>
+                <hr>
+            </div>
+            <?php if ( current_user_can( 'book_club_manage_lenders' ) ) { ?>
+            <div class="wbg-details-lenders-content">
+                <span>
+                <form action="" method="POST" id="wbg-lender-form">
+                    <?php
+                    $book_club_lenders = WBG_Admin::wbg_book_club_lenders();
+                    // Loop through array and make a checkbox for each element
+                    foreach ( $book_club_lenders as $bcl) :
+                        $id = $bcl->data->ID;
+                        $name = $bcl->data->display_name;
+                        // If the postmeta for checkboxes exist and
+                        // this element is part of saved meta check it.
+                        if ( in_array( $id, $book_lenders ) ) {
+                          $checked = 'checked="checked"';
+                        } else {
+                          $checked = null;
+                        }
+                        ?>
+                        <p>
+                        <label class="alignleft">
+                          <input type="checkbox" name="wbg_lenders[]" value="<?php echo $id;?>" <?php echo $checked; ?> />
+                          <span class="checkbox-title"> <?php echo $name;?></span>
+                        </label>
+                        </p>
+                    <?php endforeach; ?>
+                    <div><input type="submit" name="update_lenders" class="button submit-btn" value="<?php echo esc_attr( "Update lenders for this book" ); ?>"></div>
+                </form>
+                </span>
+            </div>
+            <?php } elseif ( current_user_can( 'book_club_read_lenders' ) ) { ?>
+            <div class="wbg-details-lenders-content">
+                <span>
                     <?php
                     // TODO: Move all this logic to a helper method.
-                    foreach ( $wbg_lenders as $lender_id ) {
-                        // TODO: Decouple from BuddyPress with a helper method or make it required.
+                    foreach ( $book_lenders as $lender_id ) {
                         $lender = get_user_by( 'id', $lender_id );
                         $lender_link = '<a href="mailto:'.$lender->user_email.'">'.$lender->display_name.'</a>';
+                        // When BuddyPress is installed and enabled the link points to the user profile.
                         if ( function_exists( 'bp_core_get_userlink' ) ) {
                             $lender_link = bp_core_get_userlink( $lender_id );
                         }
                         echo '<p>'.$lender_link.'</p>';
                     }
                     ?>
-                    </span>
-                </div>
+                </span>
+            </div>
             <?php } ?>
         </div>
         <?php } ?>
 
-        <?php
-            if ( in_array( 'book_club_lender', $user_roles ) ) {
-                // The user has the "book_club_lender" role.
-                if ( in_array( $user->ID, $wbg_lenders ) ) {
-                ?>
-                    <form action="" method="POST" id="wbg-lender-form">
-                        <div><input type="submit" name="remove_me_as_lender" class="button submit-btn" value="<?php echo esc_attr( "Remove me as lender for this book" ); ?>"></div>
-                    </form>
-                <?php
-                } else {
-                ?>
-                    <form action="" method="POST" id="wbg-lender-form">
-                        <div><input type="submit" name="add_me_as_lender" class="button submit-btn" value="<?php echo esc_attr( "Add me as a lended of this book" ); ?>"></div>
-                    </form>
-                <?php
-                }
-            }
-        ?>
+        <?php if ( current_user_can( 'book_club_manage_lenders' ) ) {  ?>
+        <?php } elseif ( current_user_can( 'book_club_lend_book' ) ) { ?>
+            <?php if ( in_array( $user->ID, $book_lenders ) ) { ?>
+                <form action="" method="POST" id="wbg-lender-form">
+                    <div><input type="submit" name="remove_me_as_lender" class="button submit-btn" value="<?php echo esc_attr( "Remove me as lender for this book" ); ?>"></div>
+                </form>
+            <?php } else { ?>
+                <form action="" method="POST" id="wbg-lender-form">
+                    <div><input type="submit" name="add_me_as_lender" class="button submit-btn" value="<?php echo esc_attr( "Add me as a lended of this book" ); ?>"></div>
+                </form>
+            <?php } ?>
+        <?php } ?>
 
-        <?php
-        }
-    }
-    ?>
+    <?php } ?>
 
 </div>
 
