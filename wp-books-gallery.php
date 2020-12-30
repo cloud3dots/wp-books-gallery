@@ -19,7 +19,7 @@ define( 'WBG_SLUG', plugin_basename( __FILE__ ) );
 define( 'WBG_PRFX', 'wbg_' );
 define( 'WBG_CLS_PRFX', 'cls-books-gallery-' );
 define( 'WBG_TXT_DOMAIN', 'wp-books-gallery' );
-define( 'WBG_VERSION', '1.9' );
+define( 'WBG_VERSION', '1.9.0.1' );
 
 require_once WBG_PATH . 'inc/' . WBG_CLS_PRFX . 'master.php';
 $wbg = new WBG_Master();

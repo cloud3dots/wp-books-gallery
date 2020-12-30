@@ -235,28 +235,26 @@ if ( isset( $_POST['add_me_as_lender'] )  && !in_array( $user->ID, $wbg_lenders 
         <?php if ( is_user_logged_in() ) { ?>
         <div class="wbg-details-lenders">
             <?php if ( '1' == $wbg_display_lenders ) { ?>
-                <?php if( ! empty( get_the_content() ) ) { ?>
-                    <div class="wbg-details-lenders-title">
-                        <b><?php echo esc_html( $wbg_lenders_label ); ?>:</b>
-                        <hr>
-                    </div>
-                    <div class="wbg-details-lenders-content">
-                      <span>
-                      <?php
-                        // TODO: Move all this logic to a helper method.
-                        foreach ( $wbg_lenders as $lender_id ) {
-                            // TODO: Decouple from BuddyPress with a helper method or make it required.
-                            $lender = get_user_by( 'id', $lender_id );
-                            $lender_link = '<a href="mailto:'.$lender->user_email.'">'.$lender->display_name.'</a>';
-                            if ( function_exists( 'bp_core_get_userlink' ) ) {
-                                $lender_link = bp_core_get_userlink( $lender_id );
-                            }
-                            echo '<p>'.$lender_link.'</p>';
+                <div class="wbg-details-lenders-title">
+                    <b><?php echo esc_html( $wbg_lenders_label ); ?>:</b>
+                    <hr>
+                </div>
+                <div class="wbg-details-lenders-content">
+                    <span>
+                    <?php
+                    // TODO: Move all this logic to a helper method.
+                    foreach ( $wbg_lenders as $lender_id ) {
+                        // TODO: Decouple from BuddyPress with a helper method or make it required.
+                        $lender = get_user_by( 'id', $lender_id );
+                        $lender_link = '<a href="mailto:'.$lender->user_email.'">'.$lender->display_name.'</a>';
+                        if ( function_exists( 'bp_core_get_userlink' ) ) {
+                            $lender_link = bp_core_get_userlink( $lender_id );
                         }
-                      ?>
-                      </span>
-                    </div>
-                <?php } ?>
+                        echo '<p>'.$lender_link.'</p>';
+                    }
+                    ?>
+                    </span>
+                </div>
             <?php } ?>
         </div>
         <?php } ?>
