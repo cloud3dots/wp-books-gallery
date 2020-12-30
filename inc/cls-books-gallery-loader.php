@@ -37,4 +37,3 @@ class WBG_Loader {
 		}
 	}
 }
-?>

@@ -42,8 +42,12 @@ class WBG_Master
 		// Add actions for required plugins.
 		$this->wbg_loader->add_action('tgmpa_register', $wbg_admin, WBG_PRFX . 'register_required_plugins', 0);
 		// Add actions for extending User Profiles.
-		// $this->wbg_loader->add_action( 'show_user_profile', $wbg_admin, 'wbg_extend_user_profile_fields' );
-		// $this->wbg_loader->add_action( 'edit_user_profile', $wbg_admin, 'wbg_extend_user_profile_fields' );
+		// $this->wbg_loader->add_action( 'show_user_profile', $wbg_admin, WBG_PRFX . 'extend_user_profile_fields' );
+		// $this->wbg_loader->add_action( 'edit_user_profile', $wbg_admin, WBG_PRFX . 'extend_user_profile_fields' );
+		// Add actions for extending Quick Edit.
+		$this->wbg_loader->add_filter( 'manage_posts_columns', $wbg_admin, WBG_PRFX . 'add_column_lenders', 10, 2 );
+		$this->wbg_loader->add_filter( 'manage_edit-post_columns', $wbg_admin, WBG_PRFX . 'remove_column_lenders' );
+		$this->wbg_loader->add_action( 'quick_edit_custom_box', $wbg_admin, WBG_PRFX . 'quickedit_posts_custom_box', 10, 2 );
 	}
 
 	function wbg_trigger_front_hooks() {

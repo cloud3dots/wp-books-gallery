@@ -3,8 +3,7 @@
 /**
  *	Admin Parent Class
  */
-class WBG_Admin
-{
+class WBG_Admin {
 	private $wbg_version;
 	private $wbg_assets_prefix;
 
@@ -479,4 +478,79 @@ class WBG_Admin
 
     tgmpa($plugins, $config);
   }
-}
+
+  function wbg_quickedit_posts_custom_box($column_name) {
+
+    if ('lenders' == $column_name) {
+      global $post;
+      // Nonce field to validate form request came from current site
+      wp_nonce_field(basename(__FILE__), 'event_fields');
+      $wbg_lenders = maybe_unserialize(get_post_meta($post->ID, 'wbg_lenders', true));
+
+      // TODO: Move this code to a helper function named wbg_book_club_members() outside this class.
+      $book_club_members = $this->wbg_book_club_members();
+
+      echo '
+  <fieldset class="inline-edit-col-right">
+    <div class="inline-edit-col">
+      <label class="inline-edit-lenders">
+        <span class="title"> Lenders</span>
+      </label>
+      <div class="inline-edit-group">
+      ';
+
+      // echo '
+      //     <label class="alignleft">
+      //         <input type="checkbox" name="yourformfield" id="yourformfield_check">
+      //         <span class="checkbox-title">One Lender</span>
+      //     </label>
+      //     <label class="alignleft">
+      //         <input type="checkbox" name="yourformfield" id="yourformfield_check">
+      //         <span class="checkbox-title">One Lender</span>
+      //     </label>
+      // ';
+
+      // Loop through array and make a checkbox for each element
+      foreach ( $book_club_members as $bcm) {
+        $id = $bcm->data->ID;
+        $name = $bcm->data->display_name;
+
+        // If the postmeta for checkboxes exist and
+        // this element is part of saved meta check it.
+        if ( is_array( $wbg_lenders ) && in_array( $id, $wbg_lenders ) ) {
+          $checked = 'checked="checked"';
+        } else {
+          $checked = null;
+        }
+        ?>
+
+        <p>
+        <label class="alignleft">
+          <input type="checkbox" name="wbg_lenders[]" value="<?php echo $id;?>" <?php echo $checked; ?> />
+          <span class="checkbox-title"> <?php echo $name;?></span>
+        </label>
+        </p>
+
+        <?php
+      }
+
+      echo '
+      </div>
+    </div>
+  </fieldset>
+      ';
+    }
+  }
+
+  // Add a column for the `book` lenders.
+  function wbg_add_column_lenders($posts_columns) {
+    $posts_columns['lenders'] = 'Lenders';
+    return $posts_columns;
+  }
+
+  // But remove it again on the edit screen.
+  function wbg_remove_column_lenders($posts_columns) {
+    unset($posts_columns['lenders']);
+    return $posts_columns;
+  }
+};
