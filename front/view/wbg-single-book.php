@@ -7,7 +7,6 @@
 // Librarian action.
 if ( isset( $_POST['update_lenders'] ) && current_user_can( 'book_club_manage_lenders' ) ) {
     $wbg_lenders = (!empty($_POST['wbg_lenders'])) ? $_POST['wbg_lenders'] : '';
-    error_log(json_encode($wbg_lenders));
     update_post_meta( $post->ID, 'wbg_lenders', $wbg_lenders );
 }
 
@@ -273,6 +272,9 @@ $wbg_lenders_label           = isset( $wbgDetailSettings['wbg_lenders_label'] ) 
                     // TODO: Move all this logic to a helper method.
                     foreach ( $book_lenders as $lender_id ) {
                         $lender = get_user_by( 'id', $lender_id );
+                        if ( empty($lender) ) {
+                            continue;
+                        }
                         $lender_link = '<a href="mailto:'.$lender->user_email.'">'.$lender->display_name.'</a>';
                         // When BuddyPress is installed and enabled the link points to the user profile.
                         if ( function_exists( 'bp_core_get_userlink' ) ) {

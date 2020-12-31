@@ -550,6 +550,9 @@ class WBG_Admin {
 
   public static function wbg_book_lenders($bookID) {
     $book_lenders = maybe_unserialize(get_post_meta($bookID, 'wbg_lenders', true));
+    if (empty($book_lenders)) {
+      return array();
+    }
     // Normalize to Array().
     if ( !is_array( $book_lenders ) ) {
       $book_lenders = array($book_lenders);
