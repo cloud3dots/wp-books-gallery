@@ -346,7 +346,6 @@ class WBG_Admin {
    * Save the metabox data
    */
 	function wbg_save_book_meta($post_id) {
-    global $post;
 
     if (!current_user_can('edit_post', $post_id)) {
       return $post_id;
@@ -356,23 +355,22 @@ class WBG_Admin {
       return $post_id;
     }
 
-    $events_meta['wbg_author'] 				= (!empty($_POST['wbg_author']) && (sanitize_text_field($_POST['wbg_author']) != '')) ? sanitize_text_field($_POST['wbg_author']) : '';
-    $events_meta['wbg_download_link'] = (!empty($_POST['wbg_download_link']) && (sanitize_text_field($_POST['wbg_download_link']) != '')) ? sanitize_text_field($_POST['wbg_download_link']) : '';
-    $events_meta['wbg_publisher'] 		= (!empty($_POST['wbg_publisher']) && (sanitize_text_field($_POST['wbg_publisher']) != '')) ? sanitize_text_field($_POST['wbg_publisher']) : '';
-    $events_meta['wbg_published_on'] 	= (!empty($_POST['wbg_published_on']) && (sanitize_text_field($_POST['wbg_published_on']) != '')) ? sanitize_text_field($_POST['wbg_published_on']) : '';
-    $events_meta['wbg_isbn'] 					= (!empty($_POST['wbg_isbn']) && (sanitize_text_field($_POST['wbg_isbn']) != '')) ? sanitize_text_field($_POST['wbg_isbn']) : '';
-    $events_meta['wbg_pages'] 				= (!empty($_POST['wbg_pages']) && (sanitize_text_field($_POST['wbg_pages']) != '')) ? sanitize_text_field($_POST['wbg_pages']) : '';
-    $events_meta['wbg_country'] 			= (!empty($_POST['wbg_country']) && (sanitize_text_field($_POST['wbg_country']) != '')) ? sanitize_text_field($_POST['wbg_country']) : '';
-    $events_meta['wbg_language'] 			= (!empty($_POST['wbg_language']) && (sanitize_text_field($_POST['wbg_language']) != '')) ? sanitize_text_field($_POST['wbg_language']) : '';
-    $events_meta['wbg_dimension'] 		= (!empty($_POST['wbg_dimension']) && (sanitize_text_field($_POST['wbg_dimension']) != '')) ? sanitize_text_field($_POST['wbg_dimension']) : '';
-    $events_meta['wbg_filesize'] 			= (!empty($_POST['wbg_filesize']) && (sanitize_text_field($_POST['wbg_filesize']) != '')) ? sanitize_text_field($_POST['wbg_filesize']) : '';
-    $events_meta['wbg_status'] 				= (!empty($_POST['wbg_status']) && (sanitize_text_field($_POST['wbg_status']) != '')) ? sanitize_text_field($_POST['wbg_status']) : '';
+    if ( $_POST['action'] != 'inline-save' ) {
+      $events_meta['wbg_author'] 				= (!empty($_POST['wbg_author']) && (sanitize_text_field($_POST['wbg_author']) != '')) ? sanitize_text_field($_POST['wbg_author']) : '';
+      $events_meta['wbg_download_link'] = (!empty($_POST['wbg_download_link']) && (sanitize_text_field($_POST['wbg_download_link']) != '')) ? sanitize_text_field($_POST['wbg_download_link']) : '';
+      $events_meta['wbg_publisher'] 		= (!empty($_POST['wbg_publisher']) && (sanitize_text_field($_POST['wbg_publisher']) != '')) ? sanitize_text_field($_POST['wbg_publisher']) : '';
+      $events_meta['wbg_published_on'] 	= (!empty($_POST['wbg_published_on']) && (sanitize_text_field($_POST['wbg_published_on']) != '')) ? sanitize_text_field($_POST['wbg_published_on']) : '';
+      $events_meta['wbg_isbn'] 					= (!empty($_POST['wbg_isbn']) && (sanitize_text_field($_POST['wbg_isbn']) != '')) ? sanitize_text_field($_POST['wbg_isbn']) : '';
+      $events_meta['wbg_pages'] 				= (!empty($_POST['wbg_pages']) && (sanitize_text_field($_POST['wbg_pages']) != '')) ? sanitize_text_field($_POST['wbg_pages']) : '';
+      $events_meta['wbg_country'] 			= (!empty($_POST['wbg_country']) && (sanitize_text_field($_POST['wbg_country']) != '')) ? sanitize_text_field($_POST['wbg_country']) : '';
+      $events_meta['wbg_language'] 			= (!empty($_POST['wbg_language']) && (sanitize_text_field($_POST['wbg_language']) != '')) ? sanitize_text_field($_POST['wbg_language']) : '';
+      $events_meta['wbg_dimension'] 		= (!empty($_POST['wbg_dimension']) && (sanitize_text_field($_POST['wbg_dimension']) != '')) ? sanitize_text_field($_POST['wbg_dimension']) : '';
+      $events_meta['wbg_filesize'] 			= (!empty($_POST['wbg_filesize']) && (sanitize_text_field($_POST['wbg_filesize']) != '')) ? sanitize_text_field($_POST['wbg_filesize']) : '';
+      $events_meta['wbg_status'] 				= (!empty($_POST['wbg_status']) && (sanitize_text_field($_POST['wbg_status']) != '')) ? sanitize_text_field($_POST['wbg_status']) : '';
+    }
     $events_meta['wbg_lenders'] 			= (!empty($_POST['wbg_lenders'])) ? $_POST['wbg_lenders'] : '';
 
     foreach ($events_meta as $key => $value) {
-      if ('revision' === $post->post_type) {
-        return;
-      }
       if (get_post_meta($post_id, $key, false)) {
         update_post_meta($post_id, $key, $value);
       } else {
