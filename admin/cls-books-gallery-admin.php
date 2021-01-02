@@ -92,7 +92,7 @@ class WBG_Admin {
 		);
 	}
 
-  function wbg_custom_post_type() {
+  function wbg_custom_post_type_books() {
     $labels = array(
       'name'                => __('Books'),
       'singular_name'       => __('Book'),
@@ -346,6 +346,10 @@ class WBG_Admin {
    * Save the metabox data
    */
 	function wbg_save_book_meta($post_id) {
+    $post = get_post( $post_id );
+    if ( 'books' != $post->post_type  ) {
+      return $post_id;
+    }
 
     if (!current_user_can('edit_post', $post_id)) {
       return $post_id;

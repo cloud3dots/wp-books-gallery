@@ -34,7 +34,7 @@ class WBG_Master
 	private function wbg_trigger_admin_hooks() {
 		$wbg_admin = new WBG_Admin($this->wbg_version());
 		$this->wbg_loader->add_action('admin_enqueue_scripts', $wbg_admin, WBG_PRFX . 'enqueue_assets');
-		$this->wbg_loader->add_action('init', $wbg_admin, WBG_PRFX . 'custom_post_type', 0);
+		$this->wbg_loader->add_action('init', $wbg_admin, WBG_PRFX . 'custom_post_type_books', 0);
 		$this->wbg_loader->add_action('init', $wbg_admin, WBG_PRFX . 'taxonomy_for_books', 0);
 		$this->wbg_loader->add_action('add_meta_boxes', $wbg_admin, WBG_PRFX . 'book_details_metaboxes');
 		$this->wbg_loader->add_action('save_post', $wbg_admin, WBG_PRFX . 'save_book_meta', 1, 1);
