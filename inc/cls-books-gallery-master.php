@@ -41,9 +41,6 @@ class WBG_Master
 		$this->wbg_loader->add_action('admin_menu', $wbg_admin, WBG_PRFX . 'admin_menu', 0);
 		// Add actions for required plugins.
 		$this->wbg_loader->add_action('tgmpa_register', $wbg_admin, WBG_PRFX . 'register_required_plugins', 0);
-		// Add actions for extending User Profiles.
-		// $this->wbg_loader->add_action( 'show_user_profile', $wbg_admin, WBG_PRFX . 'extend_user_profile_fields' );
-		// $this->wbg_loader->add_action( 'edit_user_profile', $wbg_admin, WBG_PRFX . 'extend_user_profile_fields' );
 		// Add actions for extending Quick Edit.
 		$this->wbg_loader->add_filter( 'manage_posts_columns', $wbg_admin, WBG_PRFX . 'add_column_lenders', 10, 2 );
 		$this->wbg_loader->add_filter( 'manage_edit-post_columns', $wbg_admin, WBG_PRFX . 'remove_column_lenders' );
@@ -55,13 +52,6 @@ class WBG_Master
 		$this->wbg_loader->add_action('wp_enqueue_scripts', $wbg_front, WBG_PRFX . 'front_assets');
 		$this->wbg_loader->add_filter('single_template', $wbg_front, 'wbg_load_single_template', 10);
 		$wbg_front->wbg_load_shortcode();
-		// Add actions for extending User Profiles.
-		//   Example: https://wordpress.org/support/topic/applying-custom-taxonomies-to-user-profiles/
-		// $this->wbg_loader->add_action( 'show_user_profile', $wbg_front, 'wbg_add_extra_user_fields' );
-		// $this->wbg_loader->add_action( 'edit_user_profile', $wbg_front, 'wbg_add_extra_user_fields' );
-		// $this->wbg_loader->add_action( 'personal_options_update', $wbg_front, 'wbg_save_extra_user_fields' );
-		// $this->wbg_loader->add_action( 'user_profile_update_errors', 'wbg_validate_extra_user_fields' );
-		// $this->wbg_loader->add_action( 'edit_user_profile_update', $wbg_front, 'wbg_save_extra_user_fields' )
 	}
 
 	function wbg_run() {

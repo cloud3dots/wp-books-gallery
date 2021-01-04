@@ -5,7 +5,7 @@
  */
 
 // Librarian action.
-if ( isset( $_POST['update_lenders'] ) && current_user_can( 'book_club_manage_lenders' ) ) {
+if ( isset( $_POST['update_lenders'] ) && current_user_can( 'manage_wbg_lenders' ) ) {
     $wbg_lenders = (!empty($_POST['wbg_lenders'])) ? $_POST['wbg_lenders'] : '';
     update_post_meta( $post->ID, 'wbg_lenders', $wbg_lenders );
 }
@@ -14,7 +14,7 @@ $user = wp_get_current_user();
 $book_lenders = WBG_Admin::wbg_book_lenders($post->ID);
 
 // Lender action.
-if ( current_user_can( 'book_club_lend_book' ) ) {
+if ( current_user_can( 'lend_wbg_books' ) ) {
     if ( isset( $_POST['add_me_as_lender'] ) && !in_array( $user->ID, $book_lenders ) ) {
         array_push( $book_lenders, strval( $user->ID ) );
         update_post_meta( $post->ID, 'wbg_lenders', serialize($book_lenders) );
@@ -236,7 +236,7 @@ $wbg_lenders_label           = isset( $wbgDetailSettings['wbg_lenders_label'] ) 
                 <b><?php echo esc_html( $wbg_lenders_label ); ?>:</b>
                 <hr>
             </div>
-            <?php if ( current_user_can( 'book_club_manage_lenders' ) ) { ?>
+            <?php if ( current_user_can( 'manage_wbg_lenders' ) ) { ?>
             <div class="wbg-details-lenders-content">
                 <span>
                 <form action="" method="POST" id="wbg-lender-form">
@@ -265,7 +265,7 @@ $wbg_lenders_label           = isset( $wbgDetailSettings['wbg_lenders_label'] ) 
                 </form>
                 </span>
             </div>
-            <?php } elseif ( current_user_can( 'book_club_read_lenders' ) ) { ?>
+            <?php } elseif ( current_user_can( 'read_wbg_lenders' ) ) { ?>
             <div class="wbg-details-lenders-content">
                 <span>
                     <?php
@@ -289,8 +289,8 @@ $wbg_lenders_label           = isset( $wbgDetailSettings['wbg_lenders_label'] ) 
         </div>
         <?php } ?>
 
-        <?php if ( current_user_can( 'book_club_manage_lenders' ) ) {  ?>
-        <?php } elseif ( current_user_can( 'book_club_lend_book' ) ) { ?>
+        <?php if ( current_user_can( 'manage_wbg_lenders' ) ) {  ?>
+        <?php } elseif ( current_user_can( 'lend_wbg_books' ) ) { ?>
             <?php if ( in_array( $user->ID, $book_lenders ) ) { ?>
                 <form action="" method="POST" id="wbg-lender-form">
                     <div><input type="submit" name="remove_me_as_lender" class="button submit-btn" value="<?php echo esc_attr( "Remove me as lender for this book" ); ?>"></div>

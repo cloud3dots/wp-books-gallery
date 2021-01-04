@@ -112,7 +112,7 @@ class WBG_Admin {
       'label'               => __('books'),
       'description'         => __('Description For Books'),
       'labels'              => $labels,
-      'supports'            => array('title', 'editor', 'thumbnail'),
+      'supports'            => array('title', 'editor', 'thumbnail', 'comments' ),
       'public'              => true,
       'hierarchical'        => true,
       'show_ui'             => true,
@@ -124,13 +124,13 @@ class WBG_Admin {
       'can_export'          => true,
       'exclude_from_search' => false,
       'yarpp_support'       => true,
-      // 'taxonomies'          => array('post_tag'),
       'publicly_queryable'  => true,
-      'capability_type'     => 'post',
+      'capability_type'     => 'wbg_book',
       'menu_icon'           => 'dashicons-book',
       'query_var'           => true,
       'taxonomies'          => array( 'category', 'post_tag' ),
       'rewrite'             => array('slug' => 'books'),
+      'map_meta_cap'        => true,
     );
     register_post_type('books', $args);
   }
@@ -351,11 +351,11 @@ class WBG_Admin {
       return $post_id;
     }
 
-    if (!current_user_can('edit_post', $post_id)) {
+    if ( ! current_user_can('edit_wbg_books', $post_id) ) {
       return $post_id;
     }
 
-    if (!wp_verify_nonce($_POST['event_fields'], basename(__FILE__))) {
+    if ( ! isset( $_POST['action'] ) ) {
       return $post_id;
     }
 
@@ -374,13 +374,13 @@ class WBG_Admin {
     }
     $events_meta['wbg_lenders'] 			= (!empty($_POST['wbg_lenders'])) ? $_POST['wbg_lenders'] : '';
 
-    foreach ($events_meta as $key => $value) {
-      if (get_post_meta($post_id, $key, false)) {
+    foreach ( $events_meta as $key => $value ) {
+      if ( get_post_meta($post_id, $key, false) ) {
         update_post_meta($post_id, $key, $value);
       } else {
         add_post_meta($post_id, $key, $value);
       }
-      if (!$value) {
+      if ( ! $value ) {
         delete_post_meta($post_id, $key);
       }
     }
@@ -483,17 +483,6 @@ class WBG_Admin {
       </label>
       <div class="inline-edit-group">
       ';
-
-      // echo '
-      //     <label class="alignleft">
-      //         <input type="checkbox" name="yourformfield" id="yourformfield_check">
-      //         <span class="checkbox-title">One Lender</span>
-      //     </label>
-      //     <label class="alignleft">
-      //         <input type="checkbox" name="yourformfield" id="yourformfield_check">
-      //         <span class="checkbox-title">One Lender</span>
-      //     </label>
-      // ';
 
       // Loop through array and make a checkbox for each element
       foreach ( $book_club_lenders as $bcl) {

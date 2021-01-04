@@ -6,7 +6,6 @@ class WBG_Activator{
 
 	public static function activate() {
 		self::set_default_roles();
-		self::add_extended_user_profile_fields();
 	}
 
 	public static function set_default_roles() {
@@ -54,7 +53,10 @@ class WBG_Activator{
 			self::set_book_club_lend_capability( $role );
 			self::set_book_club_borrow_capability( $role );
 			self::set_book_club_manage_capability( $role );
-			$role->add_cap( 'book_club_delete_book' );
+			$role->add_cap( 'delete_others_wbg_books' );
+			$role->add_cap( 'delete_private_wbg_books' );
+			$role->add_cap( 'delete_published_wbg_books' );
+			$role->add_cap( 'delete_wbg_books' );
 			return;
 		}
 		if ( 'book_club_librarian' == $name ) {
@@ -69,48 +71,39 @@ class WBG_Activator{
 	}
 
 	private static function set_book_club_manage_capability( $role ) {
-		$role->add_cap( 'book_club_add_book' );
-		$role->add_cap( 'book_club_edit_book' );
-		$role->add_cap( 'book_club_manage_lenders' );
-		$role->add_cap( 'book_club_manage_borrowers' );
-		$role->add_cap( 'book_club_read_lenders' );
-		$role->add_cap( 'book_club_read_borrowers' );
+		$role->add_cap( 'create_wbg_books' );
+		$role->add_cap( 'edit_others_wbg_books' );
+		$role->add_cap( 'edit_private_wbg_books' );
+		$role->add_cap( 'edit_published_wbg_books' );
+		$role->add_cap( 'edit_wbg_books' );
+		$role->add_cap( 'publish_wbg_books' );
+		$role->add_cap( 'read_private_wbg_books' );
+		$role->add_cap( 'read_wbg_books' );
+		$role->add_cap( 'read_wbg_borrowers' );
+		$role->add_cap( 'read_wbg_lenders' );
+		$role->add_cap( 'manage_wbg_borrowers' );
+		$role->add_cap( 'manage_wbg_lenders' );
 	}
 
 	private static function set_book_club_lend_capability( $role ) {
-		$role->add_cap( 'book_club_add_book' );
-		$role->add_cap( 'book_club_edit_book' );
-		$role->add_cap( 'book_club_lend_book' );
-		$role->add_cap( 'book_club_read_lenders' );
-		$role->add_cap( 'book_club_read_borrowers' );
+		$role->add_cap( 'create_wbg_books' );
+		$role->add_cap( 'edit_others_wbg_books' );
+		$role->add_cap( 'edit_private_wbg_books' );
+		$role->add_cap( 'edit_published_wbg_books' );
+		$role->add_cap( 'edit_wbg_books' );
+		$role->add_cap( 'publish_wbg_books' );
+		$role->add_cap( 'read_private_wbg_books' );
+		$role->add_cap( 'read_wbg_books' );
+		$role->add_cap( 'read_wbg_borrowers' );
+		$role->add_cap( 'read_wbg_lenders' );
+		$role->add_cap( 'lend_wbg_books' );
 	}
 
 	private static function set_book_club_borrow_capability( $role ) {
-		$role->add_cap( 'book_club_borrow_book' );
-		$role->add_cap( 'book_club_read_lenders' );
-		$role->add_cap( 'book_club_read_borrowers' );
-	}
-
-	private static function add_extended_user_profile_fields() {
-		// // Insert New Group.
-		// if (function_exists('xprofile_insert_field_group')) {
-		// 	$field_group = array('name' => 'Instructor', 'description' => 'Instructor only field group');
-		// 	$group_id = xprofile_insert_field_group($field_group);
-		// 	$fields = array(array('field_group_id' => 1, 'type' => 'textbox', 'name' => 'Location', 'description' => 'Student Location'), array('field_group_id' => 1, 'type' => 'textarea', 'name' => 'Bio', 'description' => 'About Student'), array('field_group_id' => $group_id, 'type' => 'textbox', 'name' => 'Speciality', 'description' => 'Instructor Speciality'));
-		// 	foreach ($fields as $field) {
-		// 		xprofile_insert_field($field);
-		// 	}
-		// }
-
-		// // Insert New Field.
-		// xprofile_insert_field(
-		// 	array (
-		// 		'field_group_id'  => 1,
-		//   		'name'            => 'Twitter',
-		// 		'field_order'     => 1,
-		// 		'is_required'     => false,
-		// 		'type'            => 'textbox'
-		// 	)
-		// );
+		$role->add_cap( 'read_private_wbg_books' );
+		$role->add_cap( 'read_wbg_books' );
+		$role->add_cap( 'read_wbg_borrowers' );
+		$role->add_cap( 'read_wbg_lenders' );
+		$role->add_cap( 'borrow_wbg_books' );
 	}
 }

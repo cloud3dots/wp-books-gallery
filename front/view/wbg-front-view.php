@@ -156,10 +156,6 @@ if ( '1' === $wbg_display_search_panel ) {
   }
   </style>
 
-  <?php if ( !is_user_logged_in() ) { ?>
-    <div>You must be a memeber in order to access this content</div>
-    <?php return; ?>
-  <?php } ?>
   <form action="" method="POST" id="wbg-search-form">
   <?php if(function_exists('wp_nonce_field')) { wp_nonce_field('wbg_nonce_field'); } ?>
     <div class="wbg-search-wrapper">
