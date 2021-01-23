@@ -4,14 +4,15 @@
  *
  */
 
-// Librarian action.
-if ( isset( $_POST['update_lenders'] ) && current_user_can( 'manage_wbg_lenders' ) ) {
-    $wbg_lenders = (!empty($_POST['wbg_lenders'])) ? $_POST['wbg_lenders'] : '';
-    update_post_meta( $post->ID, 'wbg_lenders', $wbg_lenders );
-}
 
 $user = wp_get_current_user();
 $book_lenders = WBG_Admin::wbg_book_lenders($post->ID);
+
+ // Librarian action.
+if ( isset( $_POST['update_lenders'] ) && current_user_can( 'manage_wbg_lenders' ) ) {
+    $book_lenders = (!empty($_POST['wbg_lenders'])) ? $_POST['wbg_lenders'] : '';
+    update_post_meta( $post->ID, 'wbg_lenders', $book_lenders );
+}
 
 // Lender action.
 if ( current_user_can( 'lend_wbg_books' ) ) {
@@ -21,7 +22,7 @@ if ( current_user_can( 'lend_wbg_books' ) ) {
     } elseif ( isset( $_POST['remove_me_as_lender'] ) && in_array( $user->ID, $book_lenders ) ) {
         $key = array_search( strval( $user->ID ), $book_lenders );
         if ( $key !== false ) {
-            unset($book_lenders[$key]);
+            array_splice($book_lenders, $key, 1);
         }
         update_post_meta( $post->ID, 'wbg_lenders', serialize($book_lenders) );
     }
@@ -230,76 +231,59 @@ $wbg_lenders_label           = isset( $wbgDetailSettings['wbg_lenders_label'] ) 
             <?php } ?>
         </div>
 
-        <?php if ( '1' == $wbg_display_lenders ) { ?>
+        <?php if ( '1' == $wbg_display_lenders && current_user_can( 'read_wbg_lenders' ) ) { ?>
         <div class="wbg-details-lenders">
             <div class="wbg-details-lenders-title">
                 <b><?php echo esc_html( $wbg_lenders_label ); ?>:</b>
                 <hr>
             </div>
-            <?php if ( current_user_can( 'manage_wbg_lenders' ) ) { ?>
             <div class="wbg-details-lenders-content">
                 <span>
                 <form action="" method="POST" id="wbg-lender-form">
-                    <?php
-                    $book_club_lenders = WBG_Admin::wbg_book_club_lenders();
-                    // Loop through array and make a checkbox for each element
-                    foreach ( $book_club_lenders as $bcl) :
-                        $id = $bcl->data->ID;
-                        $name = $bcl->data->display_name;
-                        // If the postmeta for checkboxes exist and
-                        // this element is part of saved meta check it.
-                        if ( in_array( $id, $book_lenders ) ) {
-                          $checked = 'checked="checked"';
-                        } else {
-                          $checked = null;
-                        }
-                        ?>
-                        <p>
-                        <label class="alignleft">
-                          <input type="checkbox" name="wbg_lenders[]" value="<?php echo $id;?>" <?php echo $checked; ?> />
-                          <span class="checkbox-title"> <?php echo $name;?></span>
-                        </label>
-                        </p>
-                    <?php endforeach; ?>
-                    <div><input type="submit" name="update_lenders" class="button submit-btn" value="<?php echo esc_attr( "Update lenders for this book" ); ?>"></div>
-                </form>
-                </span>
-            </div>
-            <?php } elseif ( current_user_can( 'read_wbg_lenders' ) ) { ?>
-            <div class="wbg-details-lenders-content">
-                <span>
-                    <?php
-                    // TODO: Move all this logic to a helper method.
-                    foreach ( $book_lenders as $lender_id ) {
-                        $lender = get_user_by( 'id', $lender_id );
-                        if ( empty($lender) ) {
-                            continue;
-                        }
-                        $lender_link = '<a href="mailto:'.$lender->user_email.'">'.$lender->display_name.'</a>';
-                        // When BuddyPress is installed and enabled the link points to the user profile.
-                        if ( function_exists( 'bp_core_get_userlink' ) ) {
-                            $lender_link = bp_core_get_userlink( $lender_id );
-                        }
-                        echo '<p>'.$lender_link.'</p>';
+                <?php
+                    $lenders = WBG_Admin::wbg_book_club_lenders($book_lenders);
+                    if ( current_user_can( 'manage_wbg_lenders' ) ) {
+                        $lenders = WBG_Admin::wbg_book_club_lenders();
                     }
-                    ?>
+
+                    // TODO: Move all this logic to a helper method.
+                    foreach ( $lenders as $lender ) :
+                        $id = $lender->data->ID;
+                        $name = $lender->data->display_name;
+                        $email = $lender->data->user_email;
+
+                        $lender_text = $lender->data->display_name;
+                        $checked = '';
+                        if ( current_user_can( 'borrow_wbg_books' ) && in_array( $id, $book_lenders ) ) {
+                            $lender_text = '<a href="mailto:'.$email.'">'.$name.'</a>';
+                            // When BuddyPress is installed and enabled the link points to the user profile.
+                            if ( function_exists( 'bp_core_get_userlink' ) ) {
+                                $lender_text = bp_core_get_userlink( $id );
+                            }
+                            $checked = 'checked="checked"';
+                        }
+
+                        echo '<p>'."\n";
+                        if ( current_user_can( 'manage_wbg_lenders' ) ) {
+                            echo '  <input type="checkbox" name="wbg_lenders[]" value="'.$id.'" '.$checked.'>'."\n";
+                        }
+                        echo '  <span>'.$lender_text.'</span>'."\n";
+                        echo '</p>'."\n";
+                    endforeach;
+                    if ( current_user_can( 'manage_wbg_lenders' ) ) {
+                        echo '<div><input type="submit" name="update_lenders" class="button submit-btn" value="'.esc_attr( "Update lenders for this book" ).'"></div>';
+                    } elseif ( current_user_can( 'lend_wbg_books' ) ) {
+                        if ( in_array( $user->ID, $book_lenders ) ) {
+                            echo '<div><input type="submit" name="remove_me_as_lender" class="button submit-btn" value="'.esc_attr( "Remove me as lender for this book" ).'"></div>';
+                        } else {
+                            echo '<div><input type="submit" name="add_me_as_lender" class="button submit-btn" value="'.esc_attr( "Add me as a lended of this book" ).'"></div>';
+                        }
+                    }
+                ?>
+                </form>
                 </span>
             </div>
-            <?php } ?>
         </div>
-        <?php } ?>
-
-        <?php if ( current_user_can( 'manage_wbg_lenders' ) ) {  ?>
-        <?php } elseif ( current_user_can( 'lend_wbg_books' ) ) { ?>
-            <?php if ( in_array( $user->ID, $book_lenders ) ) { ?>
-                <form action="" method="POST" id="wbg-lender-form">
-                    <div><input type="submit" name="remove_me_as_lender" class="button submit-btn" value="<?php echo esc_attr( "Remove me as lender for this book" ); ?>"></div>
-                </form>
-            <?php } else { ?>
-                <form action="" method="POST" id="wbg-lender-form">
-                    <div><input type="submit" name="add_me_as_lender" class="button submit-btn" value="<?php echo esc_attr( "Add me as a lended of this book" ); ?>"></div>
-                </form>
-            <?php } ?>
         <?php } ?>
 
     <?php } ?>

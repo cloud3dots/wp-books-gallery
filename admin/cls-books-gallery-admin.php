@@ -528,12 +528,13 @@ class WBG_Admin {
     return $posts_columns;
   }
 
-  public static function wbg_book_club_lenders() {
+  public static function wbg_book_club_lenders($include = []) {
     // Add Admin User ID (1) to array for excluding it.
-    $exclude_list = array( 1 );
+    $exclude = array( 1 );
     $args = array(
         'role' => 'book_club_lender',
-        'exclude' => $exclude_list
+        'include' => $include,
+        'exclude' => $exclude,
     );
     // Custom query.
     $custom_user_query = new WP_User_Query( $args );
