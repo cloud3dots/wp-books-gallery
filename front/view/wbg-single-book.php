@@ -249,10 +249,15 @@ $wbg_lenders_label           = isset( $wbgDetailSettings['wbg_lenders_label'] ) 
                     // TODO: Move all this logic to a helper method.
                     foreach ( $lenders as $lender ) :
                         $id = $lender->data->ID;
-                        $name = $lender->data->display_name;
                         $email = $lender->data->user_email;
+                        $first_name = get_user_meta( $id, 'first_name', true );
+                        $last_name = get_user_meta( $id, 'last_name', true );
+                        $name = $first_name.' '.$last_name;
+                        if ( empty($name) ) {
+                            $name = $lender->data->display_name;
+                        }
 
-                        $lender_text = $lender->data->display_name;
+                        $lender_text = $name;
                         $checked = '';
                         if ( current_user_can( 'borrow_wbg_books' ) && in_array( $id, $book_lenders ) ) {
                             $lender_text = '<a href="mailto:'.$email.'">'.$name.'</a>';
