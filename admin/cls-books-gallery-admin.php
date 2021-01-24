@@ -484,7 +484,7 @@ class WBG_Admin {
       <div class="inline-edit-group">
       ';
 
-      // Loop through array and make a checkbox for each element
+      // Loop through array and make a checkbox for each element.
       foreach ( $book_club_lenders as $bcl) {
         $id = $bcl->data->ID;
         $name = $bcl->data->display_name;
@@ -528,11 +528,21 @@ class WBG_Admin {
     return $posts_columns;
   }
 
+  // Fetch users in roles that are allowed to Lend Books.
+  // When include[] parameter is included, it filters only the
+  // users that are included in that array.
   public static function wbg_book_club_lenders($include = []) {
     // Add Admin User ID (1) to array for excluding it.
     $exclude = array( 1 );
+    // Lookup for roles with lend_wbg_books capability enabled.
+    $roles__in = [];
+    foreach( wp_roles()->roles as $role_slug => $role ) {
+      if( ! empty( $role['capabilities']['lend_wbg_books'] ) )
+        $roles__in[] = $role_slug;
+    }
+    // Prepare the filter.
     $args = array(
-        'role' => 'book_club_lender',
+        'role__in' => $roles__in,
         'include' => $include,
         'exclude' => $exclude,
     );
