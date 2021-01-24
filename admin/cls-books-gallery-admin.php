@@ -537,8 +537,12 @@ class WBG_Admin {
     // Lookup for roles with lend_wbg_books capability enabled.
     $roles__in = [];
     foreach( wp_roles()->roles as $role_slug => $role ) {
-      if( ! empty( $role['capabilities']['lend_wbg_books'] ) )
+      if ( $role_slug == 'administrator') {
+        continue;
+      }
+      if( ! empty( $role['capabilities']['lend_wbg_books'] ) ) {
         $roles__in[] = $role_slug;
+      }
     }
     // Prepare the filter.
     $args = array(
